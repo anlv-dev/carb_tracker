@@ -121,6 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 30.0,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -161,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'FAT',
+                            'PROTEIN',
                             style: TextStyle(
                               fontSize: 15.0,
                               color: Colors.yellow.shade600,
@@ -190,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'FAT',
+                            'CARB',
                             style: TextStyle(
                               fontSize: 15.0,
                               color: Colors.red.shade600,
@@ -211,6 +214,31 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
+              ],
+            ),
+            SizedBox(
+              height: 30.0,
+            ),
+            Row(
+              children: <Widget>[
+                Text('MEAL'),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  height: 1.0,
+                  width: 380,
+                  color: Colors.teal,
+                )
+              ],
+            ),
+            ListView(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.fastfood),
+                  title: Text('ABC'),
+                )
               ],
             )
           ],
