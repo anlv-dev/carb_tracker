@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -64,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(DateFormat.yMMMd().format(new DateTime.now()).toString()),
       ),
       body: Padding(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -233,13 +234,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ],
             ),
-            ListView(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(Icons.fastfood),
-                  title: Text('ABC'),
-                )
-              ],
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.fastfood,
+                            color: Colors.blue,
+                            size: 45.0,
+                          ),
+                          title: Text('Scrambled Add (200g)'),
+                          subtitle: Text('Carb: 14'),
+
+                          trailing: Container(
+                            width: 150.0,
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(width:40.0),
+                                Text('197 Cal'),
+                                SizedBox(width: 30.0,),
+                                Icon(Icons.delete,color: Colors.amber,)
+                              ],
+                            ),
+                          ) ,
+                          dense: true,
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ],
+              ),
             )
           ],
         ),
