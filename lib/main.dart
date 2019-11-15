@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart' as prefix0;
+import 'package:carbs_tracker_ex/screens/searchs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -237,34 +237,135 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: ListView(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.fastfood,
-                            color: Colors.blue,
-                            size: 45.0,
+                  ListTile(
+                    leading: Icon(
+                      Icons.fastfood,
+                      color: Colors.blue,
+                      size: 45.0,
+                    ),
+                    title: Text('Scrambled Add (200g)'),
+                    subtitle: Text('Carb: 14'),
+                    trailing: Container(
+                      width: 150.0,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 40.0),
+                          Text('197 Cal'),
+                          SizedBox(
+                            width: 30.0,
                           ),
-                          title: Text('Scrambled Add (200g)'),
-                          subtitle: Text('Carb: 14'),
-
-                          trailing: Container(
-                            width: 150.0,
-                            child: Row(
-                              children: <Widget>[
-                                SizedBox(width:40.0),
-                                Text('197 Cal'),
-                                SizedBox(width: 30.0,),
-                                Icon(Icons.delete,color: Colors.amber,)
-                              ],
-                            ),
-                          ) ,
-                          dense: true,
-                        ),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.amber,
+                          )
+                        ],
                       ),
-
-                    ],
+                    ),
+                    dense: true,
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.fastfood,
+                      color: Colors.blue,
+                      size: 45.0,
+                    ),
+                    title: Text('Scrambled Add (200g)'),
+                    subtitle: Text('Carb: 14'),
+                    trailing: Container(
+                      width: 150.0,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 40.0),
+                          Text('197 Cal'),
+                          SizedBox(
+                            width: 30.0,
+                          ),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.amber,
+                          )
+                        ],
+                      ),
+                    ),
+                    dense: true,
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.fastfood,
+                      color: Colors.blue,
+                      size: 45.0,
+                    ),
+                    title: Text('Scrambled Add (200g)'),
+                    subtitle: Text('Carb: 14'),
+                    trailing: Container(
+                      width: 150.0,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 40.0),
+                          Text('197 Cal'),
+                          SizedBox(
+                            width: 30.0,
+                          ),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.amber,
+                          )
+                        ],
+                      ),
+                    ),
+                    dense: true,
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.fastfood,
+                      color: Colors.blue,
+                      size: 45.0,
+                    ),
+                    title: Text('Scrambled Add (200g)'),
+                    subtitle: Text('Carb: 14'),
+                    trailing: Container(
+                      width: 150.0,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 40.0),
+                          Text('197 Cal'),
+                          SizedBox(
+                            width: 30.0,
+                          ),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.amber,
+                          )
+                        ],
+                      ),
+                    ),
+                    dense: true,
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.fastfood,
+                      color: Colors.blue,
+                      size: 45.0,
+                    ),
+                    title: Text('Scrambled Add (200g)'),
+                    subtitle: Text('Carb: 14'),
+                    trailing: Container(
+                      width: 150.0,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 40.0),
+                          Text('197 Cal'),
+                          SizedBox(
+                            width: 30.0,
+                          ),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.amber,
+                          )
+                        ],
+                      ),
+                    ),
+                    dense: true,
                   ),
                 ],
               ),
@@ -272,6 +373,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 2.0,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SearchPage()),
+          );
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.yellow,
+        child: Container(
+          height: 50.0,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
