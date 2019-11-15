@@ -1,5 +1,6 @@
+import 'package:carbs_tracker_ex/screens/search_delegate.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:carbs_tracker_ex/screens/searchs.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -378,7 +379,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => SearchPage()),
+            MaterialPageRoute(builder: (context) => SearchPageExample()),
           );
         },
         child: Icon(
