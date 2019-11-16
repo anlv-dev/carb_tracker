@@ -73,7 +73,11 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    final suggestionList = query.isEmpty ? recentCities : cities;
+    final suggestionList =
+        query.isEmpty
+            ? recentCities
+            : cities.where( (p) => p.startsWith(query)).toList()
+    ;
     return ListView.builder(
         itemCount: suggestionList.length,
         itemBuilder: (context, index) => ListTile(
