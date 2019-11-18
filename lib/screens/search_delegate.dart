@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:carbs_tracker_ex/models/foodBank.dart';
 
 class SearchPageExample extends StatefulWidget {
   @override
@@ -6,6 +7,8 @@ class SearchPageExample extends StatefulWidget {
 }
 
 class _SearchPageExampleState extends State<SearchPageExample> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,15 +27,22 @@ class _SearchPageExampleState extends State<SearchPageExample> {
   }
 }
 
-class DataSearch extends SearchDelegate<String> {
-  final cities = [
-    "HO CHI MINH",
-    "HA NOI",
-    "DA NANG",
-    "NHA TRANG",
-    "QUANG NAM",
-    "PLEIKU"
-  ];
+
+
+class DataSearch extends SearchDelegate<String>  {
+
+  static FoodBank abc;
+  final List<String> cities = abc.getFoodList();
+
+
+//  final cities = [
+//    "HO CHI MINH",
+//    "HA NOI",
+//    "DA NANG",
+//    "NHA TRANG",
+//    "QUANG NAM",
+//    "PLEIKU"
+//  ];
   final recentCities = ["HO CHI MINH", "HA NOI"];
 
   @override
