@@ -72,15 +72,38 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    return Center(
-        child: Container(
-      width: 100.0,
-      height: 100.0,
-      child: Card(
-        color: Colors.red,
-        child: Center(child: Text(query)),
+    return ListTile(
+      leading: Icon(
+        Icons.fastfood,
+        color: Colors.blue,
+        size: 45.0,
       ),
-    ));
+      title: Text(query),
+      subtitle: Text('Carb: 14'),
+      trailing: Container(
+        width: 150.0,
+        child: Row(
+          children: <Widget>[
+            SizedBox(width: 20.0),
+            Text('197 Cal'),
+            SizedBox(
+              width: 20.0,
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.amberAccent,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+      ),
+      dense: true,
+    );
   }
 
   @override
