@@ -26,14 +26,19 @@ class _SearchPageExampleState extends State<SearchPageExample> {
 
 class DataSearch extends SearchDelegate<String> {
   final cities = [
-    "HO CHI MINH",
-    "HA NOI",
-    "DA NANG",
-    "NHA TRANG",
-    "QUANG NAM",
-    "PLEIKU"
+    "COM TAM",
+    "PHO BO",
+    "HU TIEU NAMG VANG",
+    "CANH CHUA CA LOC",
+    "BUN BO",
+    "BUN THIT NUONG",
+    "BUN MAM"
   ];
-  final recentCities = ["HO CHI MINH", "HA NOI"];
+  final recentCities = [
+    "COM TAM",
+    "PHO BO",
+  ];
+  int cityIndex;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -43,7 +48,7 @@ class DataSearch extends SearchDelegate<String> {
       IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {
-          query="";
+          query = "";
         },
       )
     ];
@@ -67,20 +72,34 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    return null;
+    return Center(
+        child: Container(
+      width: 100.0,
+      height: 100.0,
+      child: Card(
+        color: Colors.red,
+        child: Center(child: Text(query)),
+      ),
+    ));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    final suggestionList = query.isEmpty ? recentCities : cities;
+    final suggestionList = query.isEmpty
+        ? recentCities
+        : cities.where((k) => k.startsWith(query)).toList();
     return ListView.builder(
-        itemCount: suggestionList.length,
-        itemBuilder: (context, index) => ListTile(
-              leading: Icon(Icons.location_city),
-              title: Text(
-                suggestionList[index],
-              ),
-            ),);
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
+          query = suggestionList[index];
+          showResults(context);
+          print(cities.indexOf(query));
+        },
+        leading: Icon(Icons.location_city),
+        title: Text(suggestionList[index]),
+      ),
+    );
   }
 }
