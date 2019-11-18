@@ -97,7 +97,7 @@ class DataSearch extends SearchDelegate<String> {
           showResults(context);
           print(cities.indexOf(query));
         },
-        leading: Icon(Icons.location_city),
+        leading: Icon(Icons.fastfood),
         title: Text(suggestionList[index]),
       ),
     );

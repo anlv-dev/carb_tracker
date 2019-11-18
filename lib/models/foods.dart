@@ -15,5 +15,9 @@ class Foods {
     Foods(5, 'Cơm tấm', 'BAT', 87, 'X'),
     Foods(6, 'Xôi bắp', 'BAT', 51.3, 'X'),
     Foods(7, 'Xôi đậu', 'BAT', 91.7, 'X'),
+    Foods(8, 'Phở', 'BAT', 59.3, 'X'),
+    Foods(9, 'Miến nước', 'BAT', 100.2, 'X'),
+    Foods(10, 'Mì nước', 'BAT', 66.4, 'X'),
+    Foods(11, 'Mì xào', 'BAT', 51.6, 'X'),
   ];
 }
