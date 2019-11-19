@@ -1,11 +1,14 @@
 import 'package:carbs_tracker_ex/screens/search_delegate.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
+
 import 'package:carbs_tracker_ex/models/company.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:intl/intl.dart';
+import 'constants.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,6 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Company> _companies = Company.getCompanies();
   List<DropdownMenuItem<Company>> _dropDownMenuItems;
   Company _selectedCompany;
+
+  String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
   @override
   void initState() {
@@ -62,47 +67,60 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.person),
-        title: Text(DateFormat.yMMMd().format(new DateTime.now()).toString()),
+        leading: Icon(Icons.launch),
+        title: Text('Track Carbohydrate'),
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime(2018, 1, 1),
+                      maxTime: DateTime(2020, 12, 31), onChanged: (date) {
+                    print('change $date');
+                  }, onConfirm: (date) {
+                    print('confirm $date');
+                    setState(() {
+                      selectedDate = new DateFormat('dd-MMM-yyyy').format(date);
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.vi);
+                },
+                child: Text(
+                  '$selectedDate',
+                  style: TextStyle(color: Colors.blue),
+                )),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text(
-                  'Main Goal',
-                  style: TextStyle(fontSize: 17.0),
+                new CircularPercentIndicator(
+                  radius: 100.0,
+                  lineWidth: 5.0,
+                  percent: 1.0,
+                  center: new Text("22.2 - Normal"),
+                  progressColor: Colors.green,
                 ),
-                SizedBox(
-                  width: 10.0,
+                new CircularPercentIndicator(
+                  radius: 130.0,
+                  lineWidth: 5.0,
+                  percent: 1.0,
+                  center: new Text("CARB 100%"),
+                  progressColor: Colors.red,
                 ),
-                DropdownButton(
-                  value: _selectedCompany,
-                  items: _dropDownMenuItems,
-                  onChanged: onChangedDropdownItem,
-                ),
-                Text(
-                  '36%',
-                  style: TextStyle(fontSize: 17.0),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                LinearPercentIndicator(
-                  width: 390.0,
-                  lineHeight: 14.0,
-                  percent: 0.5,
-                  backgroundColor: Colors.grey,
-                  progressColor: Colors.blue,
-                ),
+                new CircularPercentIndicator(
+                  radius: 100.0,
+                  lineWidth: 5.0,
+                  percent: 1.0,
+                  center: new Text("CALO 100%"),
+                  progressColor: Colors.yellow,
+                )
               ],
             ),
             SizedBox(
-              height: 30.0,
+              height: 10.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -124,106 +142,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             SizedBox(
-              height: 30.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Card(
-                  child: Container(
-                    width: 90.0,
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'FAT',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.blue.shade600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                        Text(
-                          '130.5',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.blue.shade300,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Container(
-                    width: 90.0,
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'PROTEIN',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.yellow.shade600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                        Text(
-                          '32.5',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.yellow,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Container(
-                    width: 90.0,
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'CARB',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.red.shade600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                        Text(
-                          '3.5',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30.0,
+              height: 10.0,
             ),
             Row(
               children: <Widget>[
-                Text('MEAL'),
+                Text(
+                  'MEAL',
+                  style: kOnTopBMIResult,
+                ),
               ],
             ),
             Row(
@@ -250,111 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 150.0,
                       child: Row(
                         children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
+                          SizedBox(width: 30.0),
                           Text('197 Cal'),
                           SizedBox(
                             width: 30.0,
@@ -377,10 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         elevation: 2.0,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SearchPageExample()),
-          );
+          navigateScreens();
         },
         child: Icon(
           Icons.add,
@@ -395,5 +214,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  void navigateScreens() async {
+    int result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchPageExample()),
+    );
+    print(result);
   }
 }

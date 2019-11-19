@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carbs_tracker_ex/models/foodBank.dart';
+import 'package:carbs_tracker_ex/screens/reusable_card.dart';
+import 'package:carbs_tracker_ex/constants.dart';
+import 'package:carbs_tracker_ex/screens/round_icon_button.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SearchPageExample extends StatefulWidget {
   @override
@@ -7,7 +11,18 @@ class SearchPageExample extends StatefulWidget {
 }
 
 class _SearchPageExampleState extends State<SearchPageExample> {
+  List<String> items = new List();
+  @override
+  void initState() {
+    var a = new FoodBank();
 
+    for (int i = 0; i < a.lstFoods.length; i++) {
+      items.add(a.lstFoods[i].foodName);
+    }
+
+    print(items);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +33,8 @@ class _SearchPageExampleState extends State<SearchPageExample> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              showSearch(context: context, delegate: DataSearch());
+              showSearch(
+                  context: context, delegate: DataSearch(cities: this.items));
             },
           )
         ],
@@ -27,13 +43,14 @@ class _SearchPageExampleState extends State<SearchPageExample> {
   }
 }
 
+class DataSearch extends SearchDelegate<String> {
+  List<String> cities = new List();
+  DataSearch({@required this.cities});
+  int idIndex;
+  var aListTitle = new FoodBank();
 
-
-class DataSearch extends SearchDelegate<String>  {
-
-  static FoodBank abc;
-  final List<String> cities = abc.getFoodList();
-
+  //static var a = new FoodBank();
+  //final cities = a.getFoodList();
 
 //  final cities = [
 //    "HO CHI MINH",
@@ -53,7 +70,7 @@ class DataSearch extends SearchDelegate<String>  {
       IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {
-          query="";
+          query = "";
         },
       )
     ];
@@ -77,24 +94,47 @@ class DataSearch extends SearchDelegate<String>  {
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    return null;
+    return ListTile(
+      leading: Icon(
+        Icons.fastfood,
+        color: Colors.blue,
+        size: 45.0,
+      ),
+      title: Text(
+        cities[idIndex].toString(),
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Text(aListTitle.lstFoods[idIndex].carbs.toString() + " Carbs"),
+      trailing: IconButton(
+        icon: Icon(Icons.add),
+        onPressed: () {
+          Navigator.pop(context);
+          Navigator.pop(context, idIndex);
+        },
+      ),
+      dense: true,
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    final suggestionList =
-        query.isEmpty
-            ? recentCities
-            : cities.where( (p) => p.startsWith(query)).toList()
-    ;
+    final suggestionList = query.isEmpty
+        ? recentCities
+        : cities.where((p) => p.startsWith(query)).toList();
     return ListView.builder(
-        itemCount: suggestionList.length,
-        itemBuilder: (context, index) => ListTile(
-              leading: Icon(Icons.location_city),
-              title: Text(
-                suggestionList[index],
-              ),
-            ),);
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
+          print(suggestionList[index]);
+          idIndex = cities.indexOf(suggestionList[index]);
+          showResults(context);
+        },
+        leading: Icon(Icons.location_city),
+        title: Text(
+          suggestionList[index],
+        ),
+      ),
+    );
   }
 }
