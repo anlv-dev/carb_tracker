@@ -17,6 +17,26 @@ void main() async {
   int re = await db.saveUser(new UserEatFoods(1, "20-Nov-2019", 7, 174.1));
   print(re);
 
+  //db.getCountUser()
+
+  //Algorithm
+  //- Count record by Date
+  //----Date : Now
+  //----Date : Input Manual
+  //- getIdThucAn from db --> List
+  //-- Tuong ung voi moi id se lay cac gia tri dua vao ListView.Builder(idThucAn = id trong Food Class)
+  //----- Gia tri do la : tenFood, Carb, DVT, tong luong carb
+  // doi voi nut delete trong listTitle --> Delete id trong db va update view
+
+  // Doi voi UpdateView() se co mot so truong hop sau:
+  // -- Khi khoi dong se lay ngay hien tai --> UpdateView
+  // -- Khi nguoi dung delete item on ListTittle --> UpdateView
+  // -- Khi nguoi dung thay doi ngay --> UpdateView
+  // -- Khi nguoi dung thay doi ngay va deleteitem --> UpdateView
+
+  // Doi voi DeleteItem tren ListTittle se luu y bien dau vao gom : date & idthucan can xoa
+
+
   runApp(MyApp());
 }
 
