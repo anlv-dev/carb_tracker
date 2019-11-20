@@ -1,4 +1,6 @@
+import 'package:carbs_tracker_ex/models/usereatfoods.dart';
 import 'package:carbs_tracker_ex/screens/search_delegate.dart';
+import 'package:carbs_tracker_ex/utils/database_helper_test.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
@@ -10,7 +12,13 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart';
 import 'constants.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  var db = new DatabaseHelperTest();
+  int re = await db.saveUser(new UserEatFoods(1, "20-Nov-2019", 7, 174.1));
+  print(re);
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
