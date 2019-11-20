@@ -149,30 +149,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Row(
-              children: <Widget>[
-                Text(
-                  'MEAL',
-                  style: kOnTopBMIResult,
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Container(
-                  height: 1.0,
-                  width: 380,
-                  color: Colors.teal,
-                )
-              ],
-            ),
             Expanded(
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
+                child: ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, int position) {
+                return Card(
+                  color: Colors.white,
+                  elevation: 2.0,
+                  child: ListTile(
                     leading: Icon(
                       Icons.fastfood,
                       color: Colors.blue,
@@ -198,9 +182,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     dense: true,
                   ),
-                ],
-              ),
-            )
+                );
+              },
+            ))
           ],
         ),
       ),
