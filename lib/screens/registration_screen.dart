@@ -1,8 +1,7 @@
 import 'package:carbs_tracker_ex/models/human_information.dart';
+import 'package:carbs_tracker_ex/models/user.dart';
 import 'package:carbs_tracker_ex/utils/database_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:carbs_tracker_ex/models/human_db.dart';
-import 'package:carbs_tracker_ex/models/human_cs.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'Registration_Screen';
@@ -11,7 +10,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  DatabaseHelper _databaseHelper = new DatabaseHelper();
+  var _db = new DatabaseHelper();
 
   String emailText;
   String passwordText;
@@ -19,22 +18,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   //If not exist in db
   // -> Create New
   //otherwise -> ShowDialog "Da ton tai user vui long su dung chung nang dang nhap --> Welcome Screen"
-
-  HumanDB _humanDB = new HumanDB();
-  //Human _human = new Human();
-  bool checkLogin(String e1, String p1) {
-    bool check;
-    for (int i = 0; i < _humanDB.humanBank.length; i++) {
-      if (_humanDB.humanBank[i].email == e1) {
-        check = true;
-        print('Da ton tai tai khoan');
-        break;
-      } else {
-        check = false;
-      }
-    }
-    return check;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,13 +101,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: MaterialButton(
                   onPressed: () {
                     //Implement registration functionality.
-                    if (checkLogin(emailText, passwordText) == false) {
-                      _humanDB.humanBank
-                          .add(Human(e: emailText, p: passwordText));
-                      print(emailText);
-                      print(passwordText);
-                      Navigator.pushNamed(context, HumanInfor.id);
-                    }
+                    //save to db (table user)
+                    _saveUser();
                   },
                   minWidth: 200.0,
                   height: 42.0,
@@ -139,5 +117,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  void _saveUser() async {
+    int saveResult;
+    if (emailText != null && passwordText != null) {
+      //int result = await _db.saveUser(new User(emailText, passwordText));
+      int result = await _db.checkExistUser(emailText);
+      //Check if not Exist in DB --> Save to DB
+      if (result == 0) {
+        saveResult = await _db.saveUser(new User(emailText, passwordText));
+        Navigator.pushNamed(context, HumanInfor.id);
+      } else {
+        Navigator.pop(context);
+      }
+      print(saveResult);
+    }
   }
 }

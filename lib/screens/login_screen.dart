@@ -1,7 +1,6 @@
 import 'package:carbs_tracker_ex/utils/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'main_page.dart';
-import 'package:carbs_tracker_ex/models/human_db.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'Login_Screen';
@@ -10,24 +9,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  DatabaseHelper _databaseHelper = new DatabaseHelper();
+  var _db = new DatabaseHelper();
 
   String emailText;
   String passwordText;
-  HumanDB _humanDB = new HumanDB();
-  bool checkLogin(String e1, String p1) {
-    bool check;
-    for (int i = 0; i < _humanDB.humanBank.length; i++) {
-      if (_humanDB.humanBank[i].email == e1 &&
-          _humanDB.humanBank[i].pass == p1) {
-        check = true;
-        break;
-      } else {
-        check = false;
-      }
-    }
-    return check;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,14 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 elevation: 1.0,
                 child: MaterialButton(
                   onPressed: () {
-                    print(emailText);
-                    print(passwordText);
-                    if (checkLogin(emailText, passwordText) == true) {
-                      Navigator.pushNamed(context, MainTab.id);
-                    } else {
-                      print('Failed');
-                    }
-                    //Implement login functionality.
+                    _checkLogin();
                   },
                   minWidth: 200.0,
                   height: 20.0,
@@ -135,5 +113,20 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void _checkLogin() async {
+    if (emailText != null && passwordText != null) {
+      //int result = await _db.saveUser(new User(emailText, passwordText));
+      int result = await _db.checkLogin(emailText, passwordText);
+      //Check if not Exist in DB --> Save to DB
+      if (result == 1) {
+        //saveResult = await _db.saveUser(new User(emailText, passwordText));
+        //Navigator.pushNamed(context, HumanInfor.id);
+        print('Ban da dang nhap thanh cong');
+      } else {
+        print('Email hoac mat khau khong dung!');
+      }
+    }
   }
 }
