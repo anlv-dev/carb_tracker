@@ -15,7 +15,7 @@ class DatabaseHelper {
 
   final String tableUser = "userTable";
   final String columnId = "id";
-  final String columnUsername = "username";
+  final String columnEmail = "email";
   final String columnPassword = "password";
 
   Future<Database> get db async {
@@ -39,7 +39,7 @@ class DatabaseHelper {
 
   _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $tableUser($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $columnUsername TEXT, $columnPassword TEXT)");
+        "CREATE TABLE $tableUser($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $columnEmail TEXT, $columnPassword TEXT)");
   }
 
   //CRUD: CREATE, READ, UPDATE, DELETE
@@ -55,6 +55,14 @@ class DatabaseHelper {
     var dbClient = await db;
     return Sqflite.firstIntValue(
         await dbClient.rawQuery("SELECT COUNT(*) FROM $tableUser"));
+  }
+
+  Future<int> checkExistUser(String email) async {
+    var dbClient = await db;
+    int result = Sqflite.firstIntValue(await dbClient.rawQuery(
+        "SELECT COUNT(*) FROM $tableUser WHERE $columnEmail = '$email'"));
+
+    return result;
   }
 
   //CRUD : 2-READ

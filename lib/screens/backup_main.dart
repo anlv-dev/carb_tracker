@@ -1,13 +1,61 @@
+import 'package:carbs_tracker_ex/models/foodBank.dart';
+import 'package:carbs_tracker_ex/models/usereatfoods.dart';
 import 'package:carbs_tracker_ex/screens/search_delegate.dart';
+import 'package:carbs_tracker_ex/utils/database_helper_test.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
+
 import 'package:carbs_tracker_ex/models/company.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:intl/intl.dart';
 
-void main() => runApp(MyApp());
+List idList;
+FoodBank foodBank = new FoodBank();
+double totalCarb = 0;
+void main() async {
+  int userid = 1;
+  //List idList;
+  var db = new DatabaseHelperTest();
+  //int re = await db.saveUser(new UserEatFoods(1, "21-Nov-2019", 7, 174.1));
+  //print(re);
+
+  idList = await db.getFoodIdByDate('21-Nov-2019', userid);
+  print(idList);
+
+  for (int i = 0; i < idList.length; i++) {
+    UserEatFoods userEatFoods = UserEatFoods.map(idList[i]);
+    print('ID FOOD: ${userEatFoods.idThucan}');
+    print(foodBank.lstFoods[userEatFoods.idThucan - 1].foodName);
+    totalCarb = totalCarb +
+        foodBank.lstFoods[userEatFoods.idThucan - 1].carbs.toDouble();
+  }
+
+  //print(idList);
+
+  //db.getCountUser()
+
+  //Algorithm
+  //- Count record by Date
+  //----Date : Now
+  //----Date : Input Manual
+  //- getIdThucAn from db --> List
+  //-- Tuong ung voi moi id se lay cac gia tri dua vao ListView.Builder(idThucAn = id trong Food Class)
+  //----- Gia tri do la : tenFood, Carb, DVT, tong luong carb
+  // doi voi nut delete trong listTitle --> Delete id trong db va update view
+
+  // Doi voi UpdateView() se co mot so truong hop sau:
+  // -- Khi khoi dong se lay ngay hien tai --> UpdateView
+  // -- Khi nguoi dung delete item on ListTittle --> UpdateView
+  // -- Khi nguoi dung thay doi ngay --> UpdateView
+  // -- Khi nguoi dung thay doi ngay va deleteitem --> UpdateView
+
+  // Doi voi DeleteItem tren ListTittle se luu y bien dau vao gom : date & idthucan can xoa
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -32,6 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Company> _companies = Company.getCompanies();
   List<DropdownMenuItem<Company>> _dropDownMenuItems;
   Company _selectedCompany;
+
+  String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
   @override
   void initState() {
@@ -62,47 +112,60 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.person),
-        title: Text(DateFormat.yMMMd().format(new DateTime.now()).toString()),
+        leading: Icon(Icons.launch),
+        title: Text('Track Carbohydrate'),
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  DatePicker.showDatePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime(2018, 1, 1),
+                      maxTime: DateTime(2020, 12, 31), onChanged: (date) {
+                    print('change $date');
+                  }, onConfirm: (date) {
+                    print('confirm $date');
+                    setState(() {
+                      selectedDate = new DateFormat('dd-MMM-yyyy').format(date);
+                    });
+                  }, currentTime: DateTime.now(), locale: LocaleType.vi);
+                },
+                child: Text(
+                  '$selectedDate',
+                  style: TextStyle(color: Colors.blue),
+                )),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text(
-                  'Main Goal',
-                  style: TextStyle(fontSize: 17.0),
+                new CircularPercentIndicator(
+                  radius: 100.0,
+                  lineWidth: 5.0,
+                  percent: 1.0,
+                  center: new Text("22.2 - Normal"),
+                  progressColor: Colors.green,
                 ),
-                SizedBox(
-                  width: 10.0,
+                new CircularPercentIndicator(
+                  radius: 130.0,
+                  lineWidth: 5.0,
+                  percent: 1.0,
+                  center: new Text("CARB 100%"),
+                  progressColor: Colors.red,
                 ),
-                DropdownButton(
-                  value: _selectedCompany,
-                  items: _dropDownMenuItems,
-                  onChanged: onChangedDropdownItem,
-                ),
-                Text(
-                  '36%',
-                  style: TextStyle(fontSize: 17.0),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                LinearPercentIndicator(
-                  width: 390.0,
-                  lineHeight: 14.0,
-                  percent: 0.5,
-                  backgroundColor: Colors.grey,
-                  progressColor: Colors.blue,
-                ),
+                new CircularPercentIndicator(
+                  radius: 100.0,
+                  lineWidth: 5.0,
+                  percent: 1.0,
+                  center: new Text("CALO 100%"),
+                  progressColor: Colors.yellow,
+                )
               ],
             ),
             SizedBox(
-              height: 30.0,
+              height: 10.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textBaseline: TextBaseline.alphabetic,
               children: <Widget>[
                 Text(
-                  '776',
+                  '$totalCarb',
                   style: TextStyle(fontSize: 70.0, color: Colors.blue),
                 ),
                 Text(
@@ -123,135 +186,39 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 30.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Card(
-                  child: Container(
-                    width: 90.0,
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'FAT',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.blue.shade600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                        Text(
-                          '130.5',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.blue.shade300,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Container(
-                    width: 90.0,
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'PROTEIN',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.yellow.shade600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                        Text(
-                          '32.5',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.yellow,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  child: Container(
-                    width: 90.0,
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'CARB',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.red.shade600,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8.0,
-                        ),
-                        Text(
-                          '3.5',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30.0,
-            ),
-            Row(
-              children: <Widget>[
-                Text('MEAL'),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Container(
-                  height: 1.0,
-                  width: 380,
-                  color: Colors.teal,
-                )
-              ],
-            ),
             Expanded(
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
+                child: ListView.builder(
+              itemCount: idList.length,
+              itemBuilder: (context, int position) {
+                return Card(
+                  color: Colors.white,
+                  elevation: 2.0,
+                  child: ListTile(
                     leading: Icon(
                       Icons.fastfood,
                       color: Colors.blue,
                       size: 45.0,
                     ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
+                    title: Text(
+                      '${foodBank.lstFoods[position].foodName}',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    subtitle: Text('01 ${foodBank.lstFoods[position].dv}'),
                     trailing: Container(
                       width: 150.0,
                       child: Row(
                         children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
+                          SizedBox(width: 30.0),
+                          Text(
+                            '${foodBank.lstFoods[position].carbs}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
                           SizedBox(
                             width: 30.0,
                           ),
@@ -264,113 +231,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     dense: true,
                   ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.fastfood,
-                      color: Colors.blue,
-                      size: 45.0,
-                    ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
-                    trailing: Container(
-                      width: 150.0,
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 40.0),
-                          Text('197 Cal'),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          Icon(
-                            Icons.delete,
-                            color: Colors.amber,
-                          )
-                        ],
-                      ),
-                    ),
-                    dense: true,
-                  ),
-                ],
-              ),
-            )
+                );
+              },
+            ))
           ],
         ),
       ),

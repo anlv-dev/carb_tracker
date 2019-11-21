@@ -12,7 +12,7 @@ class DatabaseHelperTest {
 
   static Database _db;
 
-  final String tableUserEatFood = "userTable";
+  final String tableUserEatFood = "userEatFoodTable";
   final String colId = "id";
   final String colusrId = "usrId";
   final String colngayanuong = "ngayanuong";
