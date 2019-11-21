@@ -66,6 +66,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 8.0,
             ),
             TextField(
+              obscureText: true,
               onChanged: (value) {
                 passwordText = value;
                 //Do something with the user input.
