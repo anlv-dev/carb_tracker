@@ -65,6 +65,13 @@ class DatabaseHelperTest {
     return result.toList();
   }
 
+  Future<List> getFoodIdByDate(String ngay, int usrId) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        "SELECT * FROM $tableUserEatFood WHERE $colngayanuong = '$ngay' AND $colusrId = $usrId");
+    return result.toList();
+  }
+
   Future<UserEatFoods> getUser(int id) async {
     var dbClient = await db;
     var result = await dbClient

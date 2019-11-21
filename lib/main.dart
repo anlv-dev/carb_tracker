@@ -1,3 +1,4 @@
+import 'package:carbs_tracker_ex/models/foodBank.dart';
 import 'package:carbs_tracker_ex/models/usereatfoods.dart';
 import 'package:carbs_tracker_ex/screens/search_delegate.dart';
 import 'package:carbs_tracker_ex/utils/database_helper_test.dart';
@@ -12,10 +13,28 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart';
 import 'constants.dart';
 
+List idList;
+FoodBank foodBank = new FoodBank();
+double totalCarb = 0;
 void main() async {
+  int userid = 1;
+  //List idList;
   var db = new DatabaseHelperTest();
-  int re = await db.saveUser(new UserEatFoods(1, "20-Nov-2019", 7, 174.1));
-  print(re);
+  //int re = await db.saveUser(new UserEatFoods(1, "21-Nov-2019", 7, 174.1));
+  //print(re);
+
+  idList = await db.getFoodIdByDate('21-Nov-2019', userid);
+  print(idList);
+
+  for (int i = 0; i < idList.length; i++) {
+    UserEatFoods userEatFoods = UserEatFoods.map(idList[i]);
+    print('ID FOOD: ${userEatFoods.idThucan}');
+    print(foodBank.lstFoods[userEatFoods.idThucan - 1].foodName);
+    totalCarb = totalCarb +
+        foodBank.lstFoods[userEatFoods.idThucan - 1].carbs.toDouble();
+  }
+
+  //print(idList);
 
   //db.getCountUser()
 
@@ -35,7 +54,6 @@ void main() async {
   // -- Khi nguoi dung thay doi ngay va deleteitem --> UpdateView
 
   // Doi voi DeleteItem tren ListTittle se luu y bien dau vao gom : date & idthucan can xoa
-
 
   runApp(MyApp());
 }
@@ -156,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textBaseline: TextBaseline.alphabetic,
               children: <Widget>[
                 Text(
-                  '776',
+                  '$totalCarb',
                   style: TextStyle(fontSize: 70.0, color: Colors.blue),
                 ),
                 Text(
@@ -171,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
                 child: ListView.builder(
-              itemCount: 5,
+              itemCount: idList.length,
               itemBuilder: (context, int position) {
                 return Card(
                   color: Colors.white,
@@ -182,14 +200,26 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.blue,
                       size: 45.0,
                     ),
-                    title: Text('Scrambled Add (200g)'),
-                    subtitle: Text('Carb: 14'),
+                    title: Text(
+                      '${foodBank.lstFoods[position].foodName}',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    subtitle: Text('01 ${foodBank.lstFoods[position].dv}'),
                     trailing: Container(
                       width: 150.0,
                       child: Row(
                         children: <Widget>[
                           SizedBox(width: 30.0),
-                          Text('197 Cal'),
+                          Text(
+                            '${foodBank.lstFoods[position].carbs}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
                           SizedBox(
                             width: 30.0,
                           ),
