@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:carbs_tracker_ex/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:carbs_tracker_ex/reuseable_widgets/button_bottom.dart';
@@ -14,7 +16,8 @@ class _HumanInforState extends State<HumanInfor> {
   String ddModeValue = 'Chọn chế độ';
   int height = 162;
   int weight = 52;
-  int age = 37;
+  int birth = 1982;
+  String gen = 'Nam';
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,12 @@ class _HumanInforState extends State<HumanInfor> {
               ),
             ),
             new TextFormField(
+              onChanged: (ns){
+                setState(() {
+                  birth = int.parse(ns);
+                  print(birth);
+                });
+              },
 
               style: TextStyle(
                 color: Colors.lightBlueAccent,
@@ -122,6 +131,12 @@ class _HumanInforState extends State<HumanInfor> {
               height: 5.0,
             ),
             new TextFormField(
+              onChanged: (gt){
+                setState(() {
+                  gen = gt.toUpperCase();
+                  //print(gen);
+                });
+              },
               style: TextStyle(
                 color: Colors.lightBlueAccent,
                 fontSize: 15.0,
@@ -193,15 +208,13 @@ class _HumanInforState extends State<HumanInfor> {
             ButtonBottom(
               textButton: 'BMI',
               onTap: () {
-                print('You pressed caculate button');
-                //print('$ns');
-                print(height);
-                BMIBrain cal = new BMIBrain(hei: height, wei: weight);
+                print(gen);
+                BMIBrain cal = new BMIBrain(hei: height, wei: weight,birthday: birth,eatMode: 'GC',gender: gen);
                 print(cal.bmiResult());
                 print(cal.getEvaluationBMI());
                 print(cal.getInterpretation());
-                var currentYear = DateTime.now().year;
-                print(currentYear.toString());
+                print('Minimize calories is : ${cal.minimizeCalories().toString()}');
+                print('Total power is : ${cal.totalPower().toString()}');
 
 
                 //Tinh toan BMI
