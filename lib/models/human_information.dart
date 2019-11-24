@@ -1,6 +1,7 @@
 import 'package:carbs_tracker_ex/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:carbs_tracker_ex/reuseable_widgets/button_bottom.dart';
+import 'package:carbs_tracker_ex/models/bmi_brain.dart';
 
 class HumanInfor extends StatefulWidget {
   static String id = 'HumanInfor';
@@ -10,7 +11,10 @@ class HumanInfor extends StatefulWidget {
 }
 
 class _HumanInforState extends State<HumanInfor> {
-  String ddModeValue = 'Binh Thuong';
+  String ddModeValue = 'Chọn chế độ';
+  int height = 162;
+  int weight = 52;
+  int age = 37;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +24,7 @@ class _HumanInforState extends State<HumanInfor> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
           children: <Widget>[
+
             Text(
               'Vui lòng nhập thông tin của bạn',
               style: TextStyle(
@@ -37,6 +42,7 @@ class _HumanInforState extends State<HumanInfor> {
               ),
             ),
             new TextFormField(
+
               style: TextStyle(
                 color: Colors.lightBlueAccent,
                 fontSize: 15.0,
@@ -60,6 +66,11 @@ class _HumanInforState extends State<HumanInfor> {
               height: 5.0,
             ),
             new TextFormField(
+              onChanged: (hei){
+                setState(() {
+                  height = int.parse(hei);
+                });
+              },
               style: TextStyle(
                 color: Colors.lightBlueAccent,
                 fontSize: 15.0,
@@ -83,6 +94,11 @@ class _HumanInforState extends State<HumanInfor> {
               height: 5.0,
             ),
             new TextFormField(
+              onChanged: (wei){
+                setState(() {
+                  weight = int.parse(wei);
+                });
+              },
               style: TextStyle(
                 color: Colors.lightBlueAccent,
                 fontSize: 15.0,
@@ -137,13 +153,10 @@ class _HumanInforState extends State<HumanInfor> {
                   width: 20.0,
                 ),
                 DropdownButton<String>(
-                  hint: Text('CHE DO AN UONG'),
+
                   value: ddModeValue,
-                  icon: Icon(Icons.add),
-                  iconSize: 24,
-                  elevation: 2,
                   style: TextStyle(
-                    color: Colors.lightBlueAccent,
+                    color: Colors.teal,
                     fontWeight: FontWeight.bold,
                     fontSize: 15.0,
                   ),
@@ -157,10 +170,12 @@ class _HumanInforState extends State<HumanInfor> {
                     });
                   },
                   items: <String>[
-                    'Binh Thuong',
-                    'Giam can',
-                    'Tang can',
-                    'Tieu duong'
+                    'Chọn chế độ',
+                    'Bình Thường',
+                    'Tăng cân',
+                    'Giảm cân',
+                    'Tiểu đường'
+
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -176,9 +191,23 @@ class _HumanInforState extends State<HumanInfor> {
               height: 200.0,
             ),
             ButtonBottom(
-              textButton: 'CACULATE YOUR BMI',
+              textButton: 'BMI',
               onTap: () {
                 print('You pressed caculate button');
+                //print('$ns');
+                print(height);
+                BMIBrain cal = new BMIBrain(hei: height, wei: weight);
+                print(cal.bmiResult());
+                print(cal.getEvaluationBMI());
+                print(cal.getInterpretation());
+                var currentYear = DateTime.now().year;
+                print(currentYear.toString());
+
+
+                //Tinh toan BMI
+                // -- Neu BMI
+                //Cap nhat thong tin vao DB
+
               },
             ),
           ],
