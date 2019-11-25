@@ -1,6 +1,5 @@
-import 'dart:typed_data';
-
-import 'package:carbs_tracker_ex/constants.dart';
+import 'package:carbs_tracker_ex/models/userenergy.dart';
+import 'package:carbs_tracker_ex/utils/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:carbs_tracker_ex/reuseable_widgets/button_bottom.dart';
 import 'package:carbs_tracker_ex/models/bmi_brain.dart';
@@ -13,6 +12,7 @@ class HumanInfor extends StatefulWidget {
 }
 
 class _HumanInforState extends State<HumanInfor> {
+  var _db = new DatabaseHelper();
   String ddModeValue = 'Chọn chế độ';
   int height = 162;
   int weight = 52;
@@ -27,7 +27,6 @@ class _HumanInforState extends State<HumanInfor> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
           children: <Widget>[
-
             Text(
               'Vui lòng nhập thông tin của bạn',
               style: TextStyle(
@@ -45,13 +44,12 @@ class _HumanInforState extends State<HumanInfor> {
               ),
             ),
             new TextFormField(
-              onChanged: (ns){
+              onChanged: (ns) {
                 setState(() {
                   birth = int.parse(ns);
                   print(birth);
                 });
               },
-
               style: TextStyle(
                 color: Colors.lightBlueAccent,
                 fontSize: 15.0,
@@ -75,7 +73,7 @@ class _HumanInforState extends State<HumanInfor> {
               height: 5.0,
             ),
             new TextFormField(
-              onChanged: (hei){
+              onChanged: (hei) {
                 setState(() {
                   height = int.parse(hei);
                 });
@@ -103,7 +101,7 @@ class _HumanInforState extends State<HumanInfor> {
               height: 5.0,
             ),
             new TextFormField(
-              onChanged: (wei){
+              onChanged: (wei) {
                 setState(() {
                   weight = int.parse(wei);
                 });
@@ -131,7 +129,7 @@ class _HumanInforState extends State<HumanInfor> {
               height: 5.0,
             ),
             new TextFormField(
-              onChanged: (gt){
+              onChanged: (gt) {
                 setState(() {
                   gen = gt.toUpperCase();
                   //print(gen);
@@ -168,7 +166,6 @@ class _HumanInforState extends State<HumanInfor> {
                   width: 20.0,
                 ),
                 DropdownButton<String>(
-
                   value: ddModeValue,
                   style: TextStyle(
                     color: Colors.teal,
@@ -190,7 +187,6 @@ class _HumanInforState extends State<HumanInfor> {
                     'Tăng cân',
                     'Giảm cân',
                     'Tiểu đường'
-
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -209,23 +205,36 @@ class _HumanInforState extends State<HumanInfor> {
               textButton: 'BMI',
               onTap: () {
                 print(gen);
-                BMIBrain cal = new BMIBrain(hei: height, wei: weight,birthday: birth,eatMode: 'GC',gender: gen);
-                print(cal.bmiResult());
-                print(cal.getEvaluationBMI());
-                print(cal.getInterpretation());
-                print('Minimize calories is : ${cal.minimizeCalories().toString()}');
-                print('Total power is : ${cal.totalPower().toString()}');
+                BMIBrain cal = new BMIBrain(
+                    hei: height,
+                    wei: weight,
+                    birthday: birth,
+                    eatMode: 'GC',
+                    gender: gen);
 
-
+                _saveEnergy();
+                _getCountRowUserEnergy();
                 //Tinh toan BMI
                 // -- Neu BMI
                 //Cap nhat thong tin vao DB
-
               },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _saveEnergy() async {
+    int res = await _db.saveUserEnergy(new UserEnergy('anlv.it.vn@gmail.com',
+        1982, 162, 53, 'NAM', 'TC', 20, 1120, 1320, true));
+    if (res > 0) {
+      print('Save success!');
+    }
+  }
+
+  void _getCountRowUserEnergy() async {
+    int res = await _db.getCountUserEnergy();
+    print(res);
   }
 }
