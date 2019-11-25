@@ -17,7 +17,7 @@ class _HumanInforState extends State<HumanInfor> {
   int height = 162;
   int weight = 52;
   int birth = 1982;
-  String gen = 'Nam';
+  String gen = 'NAM';
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +204,6 @@ class _HumanInforState extends State<HumanInfor> {
             ButtonBottom(
               textButton: 'BMI',
               onTap: () {
-                print(gen);
                 BMIBrain cal = new BMIBrain(
                     hei: height,
                     wei: weight,
@@ -212,7 +211,9 @@ class _HumanInforState extends State<HumanInfor> {
                     eatMode: 'GC',
                     gender: gen);
 
-                _saveEnergy();
+                print(cal.minimizeCalories().toString());
+
+                // _saveEnergy();
                 _getCountRowUserEnergy();
                 //Tinh toan BMI
                 // -- Neu BMI
