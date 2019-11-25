@@ -17,7 +17,8 @@ class _HumanInforState extends State<HumanInfor> {
   int height = 162;
   int weight = 52;
   int birth = 1982;
-  String gen = 'NAM';
+  String gen = 'NU';
+  String cd ='BT';
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +180,8 @@ class _HumanInforState extends State<HumanInfor> {
                   onChanged: (String newValue) {
                     setState(() {
                       ddModeValue = newValue;
+                      print(_viettatdropdownbox(newValue));
+                      cd = _viettatdropdownbox(newValue);
                     });
                   },
                   items: <String>[
@@ -204,16 +207,8 @@ class _HumanInforState extends State<HumanInfor> {
             ButtonBottom(
               textButton: 'BMI',
               onTap: () {
-                BMIBrain cal = new BMIBrain(
-                    hei: height,
-                    wei: weight,
-                    birthday: birth,
-                    eatMode: 'GC',
-                    gender: gen);
-
-                print(cal.minimizeCalories().toString());
-
-                // _saveEnergy();
+                 _saveEnergy();
+                _printsomething();
                 _getCountRowUserEnergy();
                 //Tinh toan BMI
                 // -- Neu BMI
@@ -227,8 +222,10 @@ class _HumanInforState extends State<HumanInfor> {
   }
 
   void _saveEnergy() async {
-    int res = await _db.saveUserEnergy(new UserEnergy('anlv.it.vn@gmail.com',
-        1982, 162, 53, 'NAM', 'TC', 20, 1120, 1320, true));
+    BMIBrain cal = new BMIBrain(
+        hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
+    int res = await _db.saveUserEnergy(new UserEnergy('anlv@gmail.com',
+        cal.birthday, cal.hei, cal.wei, cal.gender, cal.eatMode, cal.bmiResult(), cal.minimizeCalories(), cal.getRequireCarbByMode().round(), true));
     if (res > 0) {
       print('Save success!');
     }
@@ -237,5 +234,44 @@ class _HumanInforState extends State<HumanInfor> {
   void _getCountRowUserEnergy() async {
     int res = await _db.getCountUserEnergy();
     print(res);
+  }
+
+  void _printsomething() {
+    BMIBrain cal = new BMIBrain(
+        hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
+    String res1 = cal.minimizeCalories().round().toString();
+    String res2 = cal.getRequireCarbByMode().round().toString();
+    String res3 = cal.bmiResult();
+
+    print('Nam sinh : ${cal.birthday}');
+    print('Chieu cao : ${cal.hei}');
+    print('Can nang : ${cal.wei}');
+    print('Gioi tinh : ${cal.gender}');
+    print('Che do an uong : ${cal.eatMode}');
+    print('Minimum Calo : $res1');
+    print('Require Carb : $res2');
+    print ('BMI: $res3');
+  }
+
+  String _viettatdropdownbox(String vietbt) {
+    String selected;
+    switch (vietbt) {
+      case "Bình Thường":
+        selected = 'BT';
+        break;
+      case "Tăng cân":
+        selected = 'TC';
+        break;
+      case "Giảm cân":
+        selected = 'GC';
+        break;
+      case "Tiểu đường":
+        selected = 'TD';
+        break;
+      default:
+        selected = 'BT';
+        break;
+    }
+    return selected;
   }
 }

@@ -56,60 +56,58 @@ class BMIBrain {
     int currentYear = DateTime.now().year;
     int result;
     age = currentYear - birthday;
-    print('Current age : ${age.toString()}');
-    print('Your weight : $wei');
-    print('Your height : $hei');
+
 
     if (gender == 'NAM') {
-      print('Your gender : $gender');
+
       _minCalo = (13.397 * wei) + (4.799 * hei) - (5.677 * age) + 88.362;
-      result = _minCalo.toInt();
+      result = _minCalo.round();
     } else if (gender == 'NU') {
-      print('Your gender : $gender');
+
       _minCalo = (9.247 * wei) + (3.098 * hei) - (4.33 * age) + 447.593;
-      result = _minCalo.toInt();
+      result = _minCalo.round();
     }
     return result;
   }
 
-  double runningCalories() {
+  int runningCalories() {
     if (runningDistance > 0) {
       _runCalories = (runningDistance * 9.35 * 4.7) + ((wei - 60) * 0.08);
-      return _runCalories;
+      return _runCalories.round();
     } else {
       return 0;
     }
   }
 
-  double walkingCalories() {
+  int walkingCalories() {
     if (walkingDistance > 0) {
       _walkCalories = (walkingDistance / 0.833) *
           ((0.035 * wei) + (5 * 5 / hei) * 0.029 * wei);
-      return _walkCalories;
+      return _walkCalories.round();
     } else {
       return 0;
     }
   }
 
-  double swimmingCalories() {
+  int swimmingCalories() {
     if (swimmingTime > 0) {
       _swimCalories = swimmingTime * (11 + (wei - 56) * 0.188);
-      return _swimCalories;
+      return _swimCalories.round();
     } else {
       return 0;
     }
   }
 
-  double cyclingCalories() {
+  int  cyclingCalories() {
     if (cyclingDistance > 0) {
       _cycleCalories = cyclingDistance * (12 + (wei - 56) * 2.9);
-      return _cycleCalories;
+      return _cycleCalories.round();
     } else {
       return 0;
     }
   }
 
-  double totalPower() {
+  int totalPower() {
     return minimizeCalories() +
         walkingCalories() +
         runningCalories() +
@@ -117,9 +115,9 @@ class BMIBrain {
         cyclingCalories();
   }
 
-  getRequireCarbByMode(String mode, int age, String gender) {
-    if (gender == 'Nam') {
-      if (mode == 'BT') {
+  double getRequireCarbByMode() {
+    if (gender == 'NAM') {
+      if (eatMode == 'BT') {
         if (age >= 6 && age <= 18) {
           return (totalPower() * 0.65) / 4;
         } else if (age >= 19 && age <= 40) {
@@ -129,7 +127,8 @@ class BMIBrain {
         } else if (age >= 61) {
           return (totalPower() * 0.62) / 4;
         }
-      } else if (mode == 'GC') {
+      } else if (eatMode == 'GC') {
+        print(eatMode);
         if (age >= 6 && age <= 18) {
           return (totalPower() * 0.63) / 4;
         } else if (age >= 19 && age <= 40) {
@@ -139,7 +138,7 @@ class BMIBrain {
         } else if (age >= 61) {
           return (totalPower() * 0.60) / 4;
         }
-      } else if (mode == 'TC') {
+      } else if (eatMode == 'TC') {
         if (age >= 6 && age <= 18) {
           return (totalPower() * 0.65) / 4;
         } else if (age >= 19 && age <= 40) {
@@ -149,7 +148,50 @@ class BMIBrain {
         } else if (age >= 61) {
           return (totalPower() * 0.63) / 4;
         }
-      } else if (mode == 'TD') {
+      } else if (eatMode == 'TD') {
+        if (age >= 6 && age <= 18) {
+          return (totalPower() * 0.60) / 4;
+        } else if (age >= 19 && age <= 40) {
+          return (totalPower() * 0.59) / 4;
+        } else if (age >= 41 && age <= 60) {
+          return (totalPower() * 0.58) / 4;
+        } else if (age >= 61) {
+          return (totalPower() * 0.57) / 4;
+        }
+      }
+    } else {
+      if (eatMode == 'BT') {
+        if (age >= 6 && age <= 18) {
+          return (totalPower() * 0.64) / 4;
+        } else if (age >= 19 && age <= 40) {
+          return (totalPower() * 0.63) / 4;
+        } else if (age >= 41 && age <= 60) {
+          return (totalPower() * 0.62) / 4;
+        } else if (age >= 61) {
+          return (totalPower() * 0.61) / 4;
+        }
+      } else if (eatMode == 'GC') {
+        print(eatMode);
+        if (age >= 6 && age <= 18) {
+          return (totalPower() * 0.63) / 4;
+        } else if (age >= 19 && age <= 40) {
+          return (totalPower() * 0.62) / 4;
+        } else if (age >= 41 && age <= 60) {
+          return (totalPower() * 0.61) / 4;
+        } else if (age >= 61) {
+          return (totalPower() * 0.60) / 4;
+        }
+      } else if (eatMode == 'TC') {
+        if (age >= 6 && age <= 18) {
+          return (totalPower() * 0.65) / 4;
+        } else if (age >= 19 && age <= 40) {
+          return (totalPower() * 0.65) / 4;
+        } else if (age >= 41 && age <= 60) {
+          return (totalPower() * 0.64) / 4;
+        } else if (age >= 61) {
+          return (totalPower() * 0.63) / 4;
+        }
+      } else if (eatMode == 'TD') {
         if (age >= 6 && age <= 18) {
           return (totalPower() * 0.60) / 4;
         } else if (age >= 19 && age <= 40) {
