@@ -1,7 +1,6 @@
 class UserEnergy {
-  int _birthday;
   String _username;
-
+  int _birthday;
   int _height;
   int _weight;
   String _gender;
@@ -9,7 +8,7 @@ class UserEnergy {
   String _bmi;
   int _minCalo;
   int _totalCarb;
-  bool _status;
+  int _stat;
 
   UserEnergy(
       this._username,
@@ -21,7 +20,7 @@ class UserEnergy {
       this._bmi,
       this._minCalo,
       this._totalCarb,
-      this._status);
+      this._stat);
 
   UserEnergy.map(dynamic obj) {
     this._username = obj["username"];
@@ -33,7 +32,7 @@ class UserEnergy {
     this._bmi = obj["bmi"];
     this._minCalo = obj["mincalo"];
     this._totalCarb = obj["totalcarb"];
-    this._status = obj["status"];
+    this._stat = obj["status"];
   }
 
   String get username => _username;
@@ -45,7 +44,7 @@ class UserEnergy {
   String get bmi => _bmi;
   int get mincalo => _minCalo;
   int get totalcarb => _totalCarb;
-  bool get status => _status;
+  int get status => _stat;
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -58,7 +57,7 @@ class UserEnergy {
     map["bmi"] = _bmi;
     map["mincalo"] = _minCalo;
     map["totalcarb"] = _totalCarb;
-    map["status"] = _status;
+    map["status"] = _stat;
 
     return map;
   }
@@ -73,6 +72,6 @@ class UserEnergy {
     this._bmi = map["bmi"];
     this._minCalo = map["mincalo"];
     this._totalCarb = map["totalcarb"];
-    this._status = map["status"];
+    this._stat = map["status"];
   }
 }

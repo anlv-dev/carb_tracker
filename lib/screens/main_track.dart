@@ -191,15 +191,17 @@ class _MyHomePageState extends State<MyHomePage> {
   void getSomeData() async {
     //username : tvanh@vn.vn
     //get BMI
-//    UserEnergy _userEnergy;
-//    _userEnergy = await _db.getUserEnergy('tvanh@nld.vn');
-//    print(_userEnergy.bmi);
+    UserEnergy _userEnergy;
+    _userEnergy = await _db.getUserEnergy('anlv@pvn.vn');
+    String res2 = _userEnergy.bmi;
+
 //    User _user;
 //    _user = await _db.getUser(8);
 //    print(_user.username);
     //UserEnergy _userEnergy;
-    //int re = await _db.checkExistUserEnergy('anlv@vnn.vn');
-    int re = await _db.getCountUserEnergy();
-    print(re);
+    //int re = await _db.checkExistUserEnergy("anlv@nld.com.vn");
+    //int re = await _db.getCountUserEnergy();
+    //print(re);
+    print(res2);
   }
 }

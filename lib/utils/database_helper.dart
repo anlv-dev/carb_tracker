@@ -61,7 +61,7 @@ class DatabaseHelper {
         "CREATE TABLE $tableUser($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $columnusername TEXT, $columnPassword TEXT)");
 
     await db.execute(
-        "CREATE TABLE $tableUserEnergy($columnusername TEXT, $columnBirthday INTEGER, $columnHeight REAL, $columnWeight REAL, $columnGender TEXT, $columnMode TEXT, $columnStatus bool, $columnMinCalo INTEGER, $columnBMI INTEGER, $columnTotalCarb INTEGER )");
+        "CREATE TABLE $tableUserEnergy($columnusername TEXT, $columnBirthday INTEGER, $columnHeight INTEGER, $columnWeight INTEGER, $columnGender TEXT, $columnMode TEXT,$columnBMI TEXT, $columnMinCalo INTEGER,  $columnTotalCarb INTEGER,  $columnStatus INTEGER)");
   }
 
   //CRUD: CREATE, READ, UPDATE, DELETE
@@ -108,6 +108,7 @@ class DatabaseHelper {
     var dbClient = await db;
     int result = Sqflite.firstIntValue(await dbClient.rawQuery(
         "SELECT COUNT(*) FROM $tableUserEnergy WHERE $columnusername = '$email'"));
+    print('Your Email : $email');
 
     return result;
   }

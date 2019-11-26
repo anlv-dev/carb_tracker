@@ -22,7 +22,6 @@ class _HumanInforState extends State<HumanInfor> {
   int birth = 1982;
   String gen = 'NU';
   String cd = 'BT';
-  String userName;
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +211,7 @@ class _HumanInforState extends State<HumanInfor> {
             ButtonBottom(
               textButton: 'LƯU DỮ LIỆU',
               onTap: () {
-                _saveEnergy();
+                _saveEnergy(widget.emailText);
                 _printsomething();
                 _getCountRowUserEnergy();
                 Navigator.pushNamed(context, mainTrackRoute);
@@ -227,11 +226,11 @@ class _HumanInforState extends State<HumanInfor> {
     );
   }
 
-  void _saveEnergy() async {
+  void _saveEnergy(String email) async {
     BMIBrain cal = new BMIBrain(
         hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
     int res = await _db.saveUserEnergy(new UserEnergy(
-        userName,
+        email,
         cal.birthday,
         cal.hei,
         cal.wei,
@@ -240,7 +239,8 @@ class _HumanInforState extends State<HumanInfor> {
         cal.bmiResult(),
         cal.minimizeCalories(),
         cal.getRequireCarbByMode().round(),
-        true));
+        1));
+    print('This is your username : $email');
     if (res > 0) {
       print('Save success!');
     }
