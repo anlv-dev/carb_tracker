@@ -18,7 +18,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var _db = new DatabaseHelper();
+  String _bmiIndex;
+  String _minCalo;
+  String _totalCarb;
+  void getSomeData() async {
+    //username : tvanh@vn.vn
+    //get BMI
+    UserEnergy _userEnergy;
+    _userEnergy = await _db.getUserEnergy('anlv@pvn.vn');
+    _bmiIndex = _userEnergy.bmi;
+    _minCalo = _userEnergy.mincalo.toString();
+    _totalCarb = _userEnergy.totalcarb.toString();
+
+    print(_bmiIndex);
+  }
+
   String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
+  @override
+  void initState() {
+    getSomeData();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +87,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     radius: 100.0,
                     lineWidth: 5.0,
                     percent: 1.0,
-                    center: new Text("22.2 - Normal"),
+                    center: new Text("$_bmiIndex - Normal"),
                     progressColor: Colors.green,
                   ),
-                  new CircularPercentIndicator(
-                    radius: 130.0,
-                    lineWidth: 5.0,
-                    percent: 1.0,
-                    center: new Text("CARB 100%"),
-                    progressColor: Colors.red,
+                  CircularPercentIndicator(
+                    radius: 120.0,
+                    lineWidth: 13.0,
+                    animation: true,
+                    percent: 0.7,
+                    center: new Text(
+                      "70.0%",
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                    footer: new Text(
+                      "Carbs",
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17.0),
+                    ),
+                    circularStrokeCap: CircularStrokeCap.round,
+                    progressColor: Colors.purple,
                   ),
                   new CircularPercentIndicator(
                     radius: 100.0,
                     lineWidth: 5.0,
                     percent: 1.0,
-                    center: new Text("CALO 100%"),
-                    progressColor: Colors.yellow,
+                    center: new Text("$_minCalo Calo"),
+                    backgroundColor: Colors.grey,
+                    progressColor: Colors.blue,
                   )
                 ],
               ),
@@ -94,14 +127,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 textBaseline: TextBaseline.alphabetic,
                 children: <Widget>[
                   Text(
-                    'TOTAL CARB',
-                    style: TextStyle(fontSize: 11.0, color: Colors.blue),
+                    '20',
+                    style: TextStyle(fontSize: 30.0, color: Colors.blue),
                   ),
                   Text(
-                    '/1700',
+                    '/$_totalCarb',
                     textAlign: TextAlign.end,
                     style: TextStyle(
-                      fontSize: 30.0,
+                      fontSize: 20.0,
                       color: Colors.blue,
                     ),
                   ),
@@ -109,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                   child: ListView.builder(
-                itemCount: 0,
+                itemCount: 1,
                 itemBuilder: (context, int position) {
                   return Card(
                     color: Colors.white,
@@ -186,22 +219,5 @@ class _MyHomePageState extends State<MyHomePage> {
       MaterialPageRoute(builder: (context) => SearchPageExample()),
     );
     print(result);
-  }
-
-  void getSomeData() async {
-    //username : tvanh@vn.vn
-    //get BMI
-    UserEnergy _userEnergy;
-    _userEnergy = await _db.getUserEnergy('anlv@pvn.vn');
-    String res2 = _userEnergy.bmi;
-
-//    User _user;
-//    _user = await _db.getUser(8);
-//    print(_user.username);
-    //UserEnergy _userEnergy;
-    //int re = await _db.checkExistUserEnergy("anlv@nld.com.vn");
-    //int re = await _db.getCountUserEnergy();
-    //print(re);
-    print(res2);
   }
 }
