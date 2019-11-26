@@ -6,6 +6,8 @@ import 'package:carbs_tracker_ex/models/bmi_brain.dart';
 
 class HumanInfor extends StatefulWidget {
   static String id = 'HumanInfor';
+  final String emailText;
+  HumanInfor(this.emailText);
 
   @override
   _HumanInforState createState() => _HumanInforState();
@@ -18,7 +20,7 @@ class _HumanInforState extends State<HumanInfor> {
   int weight = 52;
   int birth = 1982;
   String gen = 'NU';
-  String cd ='BT';
+  String cd = 'BT';
 
   @override
   Widget build(BuildContext context) {
@@ -204,10 +206,11 @@ class _HumanInforState extends State<HumanInfor> {
             SizedBox(
               height: 200.0,
             ),
+            Text(widget.emailText),
             ButtonBottom(
               textButton: 'BMI',
               onTap: () {
-                 _saveEnergy();
+                //_saveEnergy();
                 _printsomething();
                 _getCountRowUserEnergy();
                 //Tinh toan BMI
@@ -224,8 +227,17 @@ class _HumanInforState extends State<HumanInfor> {
   void _saveEnergy() async {
     BMIBrain cal = new BMIBrain(
         hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
-    int res = await _db.saveUserEnergy(new UserEnergy('anlv@gmail.com',
-        cal.birthday, cal.hei, cal.wei, cal.gender, cal.eatMode, cal.bmiResult(), cal.minimizeCalories(), cal.getRequireCarbByMode().round(), true));
+    int res = await _db.saveUserEnergy(new UserEnergy(
+        'anlv@gmail.com',
+        cal.birthday,
+        cal.hei,
+        cal.wei,
+        cal.gender,
+        cal.eatMode,
+        cal.bmiResult(),
+        cal.minimizeCalories(),
+        cal.getRequireCarbByMode().round(),
+        true));
     if (res > 0) {
       print('Save success!');
     }
@@ -250,7 +262,7 @@ class _HumanInforState extends State<HumanInfor> {
     print('Che do an uong : ${cal.eatMode}');
     print('Minimum Calo : $res1');
     print('Require Carb : $res2');
-    print ('BMI: $res3');
+    print('BMI: $res3');
   }
 
   String _viettatdropdownbox(String vietbt) {
@@ -274,4 +286,8 @@ class _HumanInforState extends State<HumanInfor> {
     }
     return selected;
   }
+
+//  void printemailtext(){
+//    print(emai)
+//  }
 }

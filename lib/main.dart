@@ -10,6 +10,7 @@ import 'package:carbs_tracker_ex/screens/chat_screen.dart';
 void main() => runApp(FlashChat());
 
 class FlashChat extends StatelessWidget {
+  //final String emailText = 'anlv.it.vn@vnn.vn';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

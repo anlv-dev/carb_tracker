@@ -128,7 +128,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       //Check if not Exist in DB --> Save to DB
       if (result == 0) {
         saveResult = await _db.saveUser(new User(emailText, passwordText));
-        Navigator.pushNamed(context, HumanInfor.id);
+        Navigator.pushNamed(context, HumanInfor.id, arguments: emailText);
       } else {
         Navigator.pop(context);
       }
