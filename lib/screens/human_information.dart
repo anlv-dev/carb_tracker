@@ -3,6 +3,7 @@ import 'package:carbs_tracker_ex/utils/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:carbs_tracker_ex/reuseable_widgets/button_bottom.dart';
 import 'package:carbs_tracker_ex/models/bmi_brain.dart';
+import 'package:carbs_tracker_ex/utils/router.dart';
 
 class HumanInfor extends StatefulWidget {
   static String id = 'HumanInfor';
@@ -21,6 +22,7 @@ class _HumanInforState extends State<HumanInfor> {
   int birth = 1982;
   String gen = 'NU';
   String cd = 'BT';
+  String userName;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class _HumanInforState extends State<HumanInfor> {
               onChanged: (ns) {
                 setState(() {
                   birth = int.parse(ns);
-                  print(birth);
+                  //print(birth);
                 });
               },
               style: TextStyle(
@@ -208,11 +210,12 @@ class _HumanInforState extends State<HumanInfor> {
             ),
             Text(widget.emailText),
             ButtonBottom(
-              textButton: 'BMI',
+              textButton: 'LƯU DỮ LIỆU',
               onTap: () {
-                //_saveEnergy();
+                _saveEnergy();
                 _printsomething();
                 _getCountRowUserEnergy();
+                Navigator.pushNamed(context, mainTrackRoute);
                 //Tinh toan BMI
                 // -- Neu BMI
                 //Cap nhat thong tin vao DB
@@ -228,7 +231,7 @@ class _HumanInforState extends State<HumanInfor> {
     BMIBrain cal = new BMIBrain(
         hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
     int res = await _db.saveUserEnergy(new UserEnergy(
-        'anlv@gmail.com',
+        userName,
         cal.birthday,
         cal.hei,
         cal.wei,

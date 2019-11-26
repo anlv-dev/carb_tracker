@@ -1,7 +1,8 @@
-import 'package:carbs_tracker_ex/models/human_information.dart';
+import 'package:carbs_tracker_ex/screens/human_information.dart';
 import 'package:carbs_tracker_ex/models/user.dart';
 import 'package:carbs_tracker_ex/utils/database_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:carbs_tracker_ex/utils/router.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'Registration_Screen';
@@ -128,7 +129,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       //Check if not Exist in DB --> Save to DB
       if (result == 0) {
         saveResult = await _db.saveUser(new User(emailText, passwordText));
-        Navigator.pushNamed(context, HumanInfor.id, arguments: emailText);
+        Navigator.pushNamed(context, humanInfoRoute, arguments: emailText);
       } else {
         Navigator.pop(context);
       }

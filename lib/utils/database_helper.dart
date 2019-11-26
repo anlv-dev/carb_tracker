@@ -13,12 +13,13 @@ class DatabaseHelper {
   factory DatabaseHelper() => _instance;
 
   static Database _db;
-
+  //Table userTable
   final String tableUser = "userTable";
   final String columnId = "id";
   final String columnusername = "username";
   final String columnPassword = "password";
 
+  //Table userenergy
   final String tableUserEnergy = "userenergy";
   final String columnBirthday = "birthday";
   final String columnHeight = "height";
@@ -29,6 +30,12 @@ class DatabaseHelper {
   final String columnMinCalo = "mincalo";
   final String columnBMI = "bmi";
   final String columnTotalCarb = "totalcarb";
+
+  //Table userEatFoodTable
+  final String tableUserEatFood = "userEatFoodTable";
+  final String colngayanuong = "ngayanuong";
+  final String colidThucan = "idThucan";
+  final String coltotalCarb = "totalCarb";
 
   Future<Database> get db async {
     if (_db != null) {
@@ -96,6 +103,15 @@ class DatabaseHelper {
     return result;
   }
 
+  //Check Email Exist in tableUserEnergy
+  Future<int> checkExistUserEnergy(String email) async {
+    var dbClient = await db;
+    int result = Sqflite.firstIntValue(await dbClient.rawQuery(
+        "SELECT COUNT(*) FROM $tableUserEnergy WHERE $columnusername = '$email'"));
+
+    return result;
+  }
+
   Future<int> checkLogin(String email, String pass) async {
     var dbClient = await db;
     int result = Sqflite.firstIntValue(await dbClient.rawQuery(
@@ -119,6 +135,16 @@ class DatabaseHelper {
       return null;
     }
     return new User.fromMap(result.first);
+  }
+
+  Future<UserEnergy> getUserEnergy(String email) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        "SELECT * FROM $tableUserEnergy WHERE $columnusername = '$email'");
+    if (result.length == 0) {
+      return null;
+    }
+    return new UserEnergy.fromMap(result.first);
   }
 
   //CRUD : 4-DELETE
