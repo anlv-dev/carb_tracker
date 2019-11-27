@@ -21,6 +21,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String _bmiIndex;
   String _minCalo;
   String _totalCarb;
+  double _percentCarb;
+  double _dailyCarb = 0;
   void getSomeData() async {
     //username : tvanh@vn.vn
     //get BMI
@@ -29,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _bmiIndex = _userEnergy.bmi;
     _minCalo = _userEnergy.mincalo.toString();
     _totalCarb = _userEnergy.totalcarb.toString();
+    _percentCarb = _dailyCarb / double.parse(_totalCarb);
 
     print(_bmiIndex);
   }
@@ -87,23 +90,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     radius: 100.0,
                     lineWidth: 5.0,
                     percent: 1.0,
-                    center: new Text("$_bmiIndex - Normal"),
+                    center: new Text("$_bmiIndex"),
                     progressColor: Colors.green,
+                    footer: new Text(
+                      "BMI",
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17.0,
+                          color: Colors.teal,
+                          letterSpacing: 2.0),
+                    ),
                   ),
                   CircularPercentIndicator(
                     radius: 120.0,
                     lineWidth: 13.0,
                     animation: true,
-                    percent: 0.7,
+                    percent: _percentCarb,
                     center: new Text(
-                      "70.0%",
+                      "${_percentCarb * 100}%",
                       style: new TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 20.0),
                     ),
                     footer: new Text(
-                      "Carbs",
+                      "CARB",
                       style: new TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17.0),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17.0,
+                          color: Colors.teal,
+                          letterSpacing: 2.0),
                     ),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor: Colors.purple,
@@ -112,9 +126,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     radius: 100.0,
                     lineWidth: 5.0,
                     percent: 1.0,
-                    center: new Text("$_minCalo Calo"),
+                    center: new Text("$_minCalo"),
                     backgroundColor: Colors.grey,
                     progressColor: Colors.blue,
+                    footer: new Text(
+                      "CALO",
+                      style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17.0,
+                          color: Colors.teal,
+                          letterSpacing: 2.0),
+                    ),
                   )
                 ],
               ),
@@ -127,8 +149,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 textBaseline: TextBaseline.alphabetic,
                 children: <Widget>[
                   Text(
-                    '20',
-                    style: TextStyle(fontSize: 30.0, color: Colors.blue),
+                    '${_dailyCarb.toInt()}',
+                    style: TextStyle(fontSize: 50.0, color: Colors.blue),
                   ),
                   Text(
                     '/$_totalCarb',
@@ -167,7 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: <Widget>[
                             SizedBox(width: 30.0),
                             Text(
-                              '152',
+                              '20 Carb',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue,
