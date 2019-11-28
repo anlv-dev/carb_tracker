@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:io';
 
+import 'package:carbs_tracker_ex/models/food_Banks.dart';
 import 'package:carbs_tracker_ex/models/user.dart';
 import 'package:carbs_tracker_ex/models/userenergy.dart';
 import 'package:sqflite/sqflite.dart';
@@ -33,9 +34,18 @@ class DatabaseHelper {
 
   //Table userEatFoodTable
   final String tableUserEatFood = "userEatFoodTable";
-  final String colngayanuong = "ngayanuong";
-  final String colidThucan = "idThucan";
-  final String coltotalCarb = "totalCarb";
+  final String coleatDate = "eatDate";
+  final String colidFood = "idFood";
+  final String colnumberFood = "numberFood";
+  //Table FoodBank
+  final String tableFoodBank = "foodBank";
+  final String colFoodName = "foodName";
+  final String colFoodDvt = "foodDvt";
+  final String colFoodCarb = "foodCarb";
+  final String colFoodCalo = "foodCalo";
+  final String colFoodGroup = "foodGroup";
+
+  //
 
   Future<Database> get db async {
     if (_db != null) {
@@ -62,6 +72,12 @@ class DatabaseHelper {
 
     await db.execute(
         "CREATE TABLE $tableUserEnergy($columnusername TEXT, $columnBirthday INTEGER, $columnHeight INTEGER, $columnWeight INTEGER, $columnGender TEXT, $columnMode TEXT,$columnBMI TEXT, $columnMinCalo INTEGER,  $columnTotalCarb INTEGER,  $columnStatus INTEGER)");
+
+    await db.execute(
+        "CREATE TABLE $tableUserEatFood($columnId INTEGER PRIMARY KEY AUTOINCREMENT,$columnusername TEXT,$coleatDate TEXT, $colidFood INTEGER, $colnumberFood INTEGER)");
+
+    await db.execute(
+        "CREATE TABLE $tableFoodBank($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $colFoodName TEXT, $colFoodDvt TEXT, $colFoodCarb REAL, $colFoodCalo REAL, $colFoodGroup TEXT )");
   }
 
   //CRUD: CREATE, READ, UPDATE, DELETE
@@ -81,12 +97,26 @@ class DatabaseHelper {
     return res;
   }
 
+  // Save FoodBanks
+
+  Future<int> saveFoodBanks(FoodBanker fb) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("$tableFoodBank", fb.toMap());
+    return res;
+  }
+
   //Count row in tableuserEnergy
 
   Future<int> getCountUserEnergy() async {
     var dbClient = await db;
     return Sqflite.firstIntValue(
         await dbClient.rawQuery("SELECT COUNT(*) FROM $tableUserEnergy"));
+  }
+
+  Future<int> getCountFoodBanks() async {
+    var dbClient = await db;
+    return Sqflite.firstIntValue(
+        await dbClient.rawQuery("SELECT COUNT(*) FROM $tableFoodBank"));
   }
 
   Future<int> getCountUser() async {
@@ -125,6 +155,12 @@ class DatabaseHelper {
   Future<List> getAllUsers() async {
     var dbClient = await db;
     var result = await dbClient.rawQuery("SELECT * FROM $tableUser");
+    return result.toList();
+  }
+
+  Future<List> getAllFoods() async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery("SELECT * FROM $tableFoodBank");
     return result.toList();
   }
 

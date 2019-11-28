@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:carbs_tracker_ex/utils/router.dart';
 
-void main() => runApp(FlashChat());
+void main() => runApp(TrackCarb());
 
-class FlashChat extends StatelessWidget {
+class TrackCarb extends StatelessWidget {
   //final String emailText = 'anlv.it.vn@vnn.vn';
   @override
   Widget build(BuildContext context) {

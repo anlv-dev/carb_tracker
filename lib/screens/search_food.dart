@@ -19,6 +19,7 @@ class MySearchPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Foods'),
+        backgroundColor: Colors.blue,
         leading: IconButton(
           icon: (Icon(Icons.search)),
           onPressed: () {

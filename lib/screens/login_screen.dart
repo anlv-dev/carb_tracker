@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
       //Check if not Exist in DB --> Save to DB
       if (result == 1) {
         //saveResult = await _db.saveUser(new User(emailText, passwordText));
-        Navigator.pushNamed(context, mainTrackRoute);
+        Navigator.pushNamed(context, mainTrackRoute, arguments: emailText);
         print('Ban da dang nhap thanh cong');
       } else {
         print('Email hoac mat khau khong dung!');

@@ -1,3 +1,4 @@
+import 'package:carbs_tracker_ex/models/food_Banks.dart';
 import 'package:carbs_tracker_ex/models/user.dart';
 import 'package:carbs_tracker_ex/models/userenergy.dart';
 import 'package:carbs_tracker_ex/screens/search_delegate.dart';
@@ -12,6 +13,9 @@ import 'package:intl/intl.dart';
 
 class MyHomePage extends StatefulWidget {
   static String id = 'Main_Track';
+  String emailText;
+  MyHomePage(this.emailText);
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -26,14 +30,16 @@ class _MyHomePageState extends State<MyHomePage> {
   void getSomeData() async {
     //username : tvanh@vn.vn
     //get BMI
-    UserEnergy _userEnergy;
-    _userEnergy = await _db.getUserEnergy('anlv@pvn.vn');
-    _bmiIndex = _userEnergy.bmi;
-    _minCalo = _userEnergy.mincalo.toString();
-    _totalCarb = _userEnergy.totalcarb.toString();
-    _percentCarb = _dailyCarb / double.parse(_totalCarb);
+    if (widget.emailText != null) {
+      UserEnergy _userEnergy;
+      _userEnergy = await _db.getUserEnergy(widget.emailText);
+      _bmiIndex = _userEnergy.bmi;
+      _minCalo = _userEnergy.mincalo.toString();
+      _totalCarb = _userEnergy.totalcarb.toString();
+      _percentCarb = _dailyCarb / double.parse(_totalCarb);
 
-    print(_bmiIndex);
+      print(_bmiIndex);
+    }
   }
 
   String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
@@ -107,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     animation: true,
                     percent: _percentCarb,
                     center: new Text(
-                      "${_percentCarb * 100}%",
+                      "$_percentCarb%",
                       style: new TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 20.0),
                     ),
@@ -164,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                   child: ListView.builder(
-                itemCount: 1,
+                itemCount: 0,
                 itemBuilder: (context, int position) {
                   return Card(
                     color: Colors.white,
@@ -216,8 +222,10 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: FloatingActionButton(
           elevation: 2.0,
           onPressed: () {
-            //navigateScreens();
-            getSomeData();
+            navigateScreens();
+            //getSomeData();
+            //_save();
+            //_getCountFoodBanks();
           },
           child: Icon(
             Icons.add,
@@ -233,6 +241,21 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
+  }
+
+  void _save() async {
+    int re = await _db
+        .saveFoodBanks(new FoodBanker('COM TRANG', 'BAT', 44.2, 0, 'X'));
+
+    //FoodBanker('COM TRANG', 'BAT', 44.2, 0, 'X')
+    if (re > 0) {
+      print('Save successful!');
+    }
+  }
+
+  void _getCountFoodBanks() async {
+    int re = await _db.getCountFoodBanks();
+    print(re);
   }
 
   void navigateScreens() async {

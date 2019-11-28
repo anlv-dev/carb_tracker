@@ -4,6 +4,8 @@ import 'package:carbs_tracker_ex/screens/welcome_screen.dart';
 import 'package:carbs_tracker_ex/screens/registration_screen.dart';
 import 'package:carbs_tracker_ex/screens/human_information.dart';
 import 'package:carbs_tracker_ex/screens/main_track.dart';
+import 'package:carbs_tracker_ex/screens/search_food.dart';
+import 'package:carbs_tracker_ex/screens/search_delegate.dart';
 
 /// This file contains all the routing constants used within the app
 
@@ -12,6 +14,7 @@ const String loginRoute = 'Login_Screen';
 const String registerRoute = 'Registration_Screen';
 const String humanInfoRoute = 'HumanInfor';
 const String mainTrackRoute = 'Main_Track';
+const String searchFoodRoute = 'SearchFoods';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -27,11 +30,16 @@ class Router {
         break;
       case humanInfoRoute:
         var data = settings.arguments as String;
-        print(data);
         return MaterialPageRoute(builder: (_) => HumanInfor(data));
         break;
       case mainTrackRoute:
-        return MaterialPageRoute(builder: (_) => MyHomePage());
+        var data = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => MyHomePage(data));
+        break;
+      case searchFoodRoute:
+        return MaterialPageRoute(builder: (_) => SearchPageExample());
+        break;
+
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
