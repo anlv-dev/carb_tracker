@@ -1,5 +1,6 @@
 import 'package:carbs_tracker_ex/models/food_Banks.dart';
-import 'package:carbs_tracker_ex/models/user.dart';
+import 'package:carbs_tracker_ex/models/foodBank.dart';
+import 'package:carbs_tracker_ex/models/usereatfoods.dart';
 import 'package:carbs_tracker_ex/models/userenergy.dart';
 import 'package:carbs_tracker_ex/screens/search_delegate.dart';
 import 'package:carbs_tracker_ex/utils/database_helper.dart';
@@ -27,12 +28,17 @@ class _MyHomePageState extends State<MyHomePage> {
   String _totalCarb;
   double _percentCarb;
   double _dailyCarb = 0;
+  String _username;
+  int _noOfItems = 0;
+  String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
+
   void getSomeData() async {
     //username : tvanh@vn.vn
     //get BMI
     if (widget.emailText != null) {
       UserEnergy _userEnergy;
       _userEnergy = await _db.getUserEnergy(widget.emailText);
+      _username = widget.emailText;
       _bmiIndex = _userEnergy.bmi;
       _minCalo = _userEnergy.mincalo.toString();
       _totalCarb = _userEnergy.totalcarb.toString();
@@ -42,7 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
   @override
   void initState() {
     getSomeData();
@@ -170,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                   child: ListView.builder(
-                itemCount: 0,
+                itemCount: _noOfItems,
                 itemBuilder: (context, int position) {
                   return Card(
                     color: Colors.white,
@@ -259,10 +264,32 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void navigateScreens() async {
-    int result = await Navigator.push(
+    String result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SearchPageExample()),
     );
-    print(result);
+    print('ID Return from search page : $result');
+
+    if (result != null) {
+      setState(() {
+        _noOfItems = int.parse(result);
+        _saveEateFood(_noOfItems);
+      });
+      //int res = int.parse(result);
+
+    }
+  }
+
+  void _saveEateFood(int res) async {
+    if (res > 0 && _username != null) {
+      var a = new FoodBank();
+
+      int re = await _db
+          .saveUserEateFood(UserEatFoods(_username, selectedDate, res, 1));
+      if (res > 0) {
+        int re2 = await _db.getCountUserEatFood();
+        print(re2);
+      }
+    }
   }
 }

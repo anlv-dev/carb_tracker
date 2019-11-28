@@ -20,8 +20,6 @@ class _SearchPageExampleState extends State<SearchPageExample> {
     for (int i = 0; i < a.lstFoods.length; i++) {
       items.add(a.lstFoods[i].foodName);
     }
-
-    print(items);
     super.initState();
   }
 
@@ -134,7 +132,7 @@ class DataSearch extends SearchDelegate<String> {
             color: Colors.blue,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, idIndex);
             Navigator.pop(context, idIndex);
           },
         ),
@@ -158,7 +156,10 @@ class DataSearch extends SearchDelegate<String> {
           onTap: () {
             print(suggestionList[index]);
             idIndex = cities.indexOf(suggestionList[index]);
-            showResults(context);
+            print('When tap on search : $idIndex');
+            Navigator.pop(context, idIndex.toString());
+            Navigator.pop(context, idIndex.toString());
+            //showResults(context);
           },
           leading: Icon(
             Icons.fastfood,

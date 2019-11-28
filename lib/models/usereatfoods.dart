@@ -1,26 +1,26 @@
 class UserEatFoods {
   int _id;
-  int _usrId;
+  String _usrId;
   String _ngayanuong;
   int _idThucan;
-  double _totalCarb;
+  int _numberOfFood;
 
-  UserEatFoods(this._usrId, this._ngayanuong, this._idThucan, this._totalCarb);
-  UserEatFoods.withoutCarb(this._usrId, this._ngayanuong, this._idThucan);
+  UserEatFoods(
+      this._usrId, this._ngayanuong, this._idThucan, this._numberOfFood);
 
   UserEatFoods.map(dynamic obj) {
     this._id = obj["id"];
     this._usrId = obj["usrId"];
     this._ngayanuong = obj["ngayanuong"];
     this._idThucan = obj["idThucan"];
-    this._totalCarb = obj["totalCarb"];
+    this._numberOfFood = obj["numberOfFood"];
   }
 
   int get id => _id;
-  int get usrId => _usrId;
+  String get usrId => _usrId;
   String get ngayanuong => _ngayanuong;
   int get idThucan => _idThucan;
-  double get totalCarb => _totalCarb;
+  int get numberOfFood => _numberOfFood;
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -28,7 +28,7 @@ class UserEatFoods {
     map["usrId"] = _usrId;
     map["ngayanuong"] = _ngayanuong;
     map["idThucan"] = _idThucan;
-    map["totalCarb"] = _totalCarb;
+    map["numberOfFood"] = _numberOfFood;
 
     return map;
   }
@@ -38,6 +38,6 @@ class UserEatFoods {
     this._usrId = map["usrId"];
     this._ngayanuong = map["ngayanuong"];
     this._idThucan = map["idThucan"];
-    this._totalCarb = map["totlCarb"];
+    this._numberOfFood = map["numberOfFood"];
   }
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:carbs_tracker_ex/models/food_Banks.dart';
 import 'package:carbs_tracker_ex/models/user.dart';
+import 'package:carbs_tracker_ex/models/usereatfoods.dart';
 import 'package:carbs_tracker_ex/models/userenergy.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -105,6 +106,14 @@ class DatabaseHelper {
     return res;
   }
 
+  // Save idfood of user in table UserEatFood
+
+  Future<int> saveUserEateFood(UserEatFoods userEatFoods) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("$tableFoodBank", userEatFoods.toMap());
+    return res;
+  }
+
   //Count row in tableuserEnergy
 
   Future<int> getCountUserEnergy() async {
@@ -117,6 +126,13 @@ class DatabaseHelper {
     var dbClient = await db;
     return Sqflite.firstIntValue(
         await dbClient.rawQuery("SELECT COUNT(*) FROM $tableFoodBank"));
+  }
+
+  //Count row in table : UserEatFood
+  Future<int> getCountUserEatFood() async {
+    var dbClient = await db;
+    return Sqflite.firstIntValue(
+        await dbClient.rawQuery("SELECT COUNT(*) FROM $tableUserEatFood"));
   }
 
   Future<int> getCountUser() async {
