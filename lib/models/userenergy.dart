@@ -7,7 +7,7 @@ class UserEnergy {
   String _mode;
   String _bmi;
   int _minCalo;
-  int _totalCarb;
+  double _totalCarb;
   int _stat;
 
   UserEnergy(
@@ -43,7 +43,7 @@ class UserEnergy {
   String get mode => _mode;
   String get bmi => _bmi;
   int get mincalo => _minCalo;
-  int get totalcarb => _totalCarb;
+  double get totalcarb => _totalCarb;
   int get status => _stat;
 
   Map<String, dynamic> toMap() {

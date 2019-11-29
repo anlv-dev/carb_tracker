@@ -27,10 +27,10 @@ void main() async {
 
   for (int i = 0; i < idList.length; i++) {
     UserEatFoods userEatFoods = UserEatFoods.map(idList[i]);
-    print('ID FOOD: ${userEatFoods.idThucan}');
-    print(foodBank.lstFoods[userEatFoods.idThucan - 1].foodName);
-    totalCarb = totalCarb +
-        foodBank.lstFoods[userEatFoods.idThucan - 1].carbs.toDouble();
+    print('ID FOOD: ${userEatFoods.idFood}');
+    print(foodBank.lstFoods[userEatFoods.idFood - 1].foodName);
+    totalCarb =
+        totalCarb + foodBank.lstFoods[userEatFoods.idFood - 1].carbs.toDouble();
   }
 
   //print(idList);

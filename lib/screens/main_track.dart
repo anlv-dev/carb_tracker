@@ -23,13 +23,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var _db = new DatabaseHelper();
-  String _bmiIndex;
-  String _minCalo;
-  String _totalCarb;
-  double _percentCarb;
+  String _bmiIndex = "";
+  double _minCalo = 0;
+  double _totalCarb = 0;
+  double _percentCarb = 0;
   double _dailyCarb = 0;
   String _username;
   int _noOfItems = 0;
+  List _listFoods;
+  FoodBank foodBank = new FoodBank();
+
   String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
   void getSomeData() async {
@@ -39,11 +42,11 @@ class _MyHomePageState extends State<MyHomePage> {
       UserEnergy _userEnergy;
       _userEnergy = await _db.getUserEnergy(widget.emailText);
       _username = widget.emailText;
-      _bmiIndex = _userEnergy.bmi;
-      _minCalo = _userEnergy.mincalo.toString();
-      _totalCarb = _userEnergy.totalcarb.toString();
-      _percentCarb = _dailyCarb / double.parse(_totalCarb);
-
+      //_bmiIndex = _userEnergy.bmi;
+      //_minCalo = _userEnergy.mincalo.roundToDouble();
+      //_totalCarb = _userEnergy.totalcarb;
+      //_percentCarb = _dailyCarb / _totalCarb;
+      print(_username);
       print(_bmiIndex);
     }
   }
@@ -51,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     getSomeData();
-    // TODO: implement initState
+
     super.initState();
   }
 
@@ -160,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 textBaseline: TextBaseline.alphabetic,
                 children: <Widget>[
                   Text(
-                    '${_dailyCarb.toInt()}',
+                    '${_dailyCarb.roundToDouble().toString()}',
                     style: TextStyle(fontSize: 50.0, color: Colors.blue),
                   ),
                   Text(
@@ -227,10 +230,11 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: FloatingActionButton(
           elevation: 2.0,
           onPressed: () {
-            navigateScreens();
+            //navigateScreens();
             //getSomeData();
             //_save();
             //_getCountFoodBanks();
+            _loadEatFood();
           },
           child: Icon(
             Icons.add,
@@ -274,6 +278,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _noOfItems = int.parse(result);
         _saveEateFood(_noOfItems);
+        _loadEatFood();
       });
       //int res = int.parse(result);
 
@@ -282,14 +287,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _saveEateFood(int res) async {
     if (res > 0 && _username != null) {
-      var a = new FoodBank();
-
-      int re = await _db
-          .saveUserEateFood(UserEatFoods(_username, selectedDate, res, 1));
+      await _db.saveUserEatFood(UserEatFoods(_username, selectedDate, res, 1));
       if (res > 0) {
         int re2 = await _db.getCountUserEatFood();
         print(re2);
       }
+    }
+  }
+
+  void _loadEatFood() async {
+    _listFoods = await _db.getFoodIdByDate(selectedDate, _username);
+    print(_listFoods);
+
+    for (int i = 0; i < _listFoods.length; i++) {
+      UserEatFoods userEatFoods = UserEatFoods.map(_listFoods[i]);
+      print('ID FOOD: ${userEatFoods.idFood}');
+      print(foodBank.lstFoods[userEatFoods.idFood - 1].foodName);
+      _totalCarb = _totalCarb +
+          foodBank.lstFoods[userEatFoods.idFood - 1].carbs.toDouble();
     }
   }
 }

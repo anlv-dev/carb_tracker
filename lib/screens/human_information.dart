@@ -238,7 +238,7 @@ class _HumanInforState extends State<HumanInfor> {
         cal.eatMode,
         cal.bmiResult(),
         cal.minimizeCalories(),
-        cal.getRequireCarbByMode().round(),
+        cal.getRequireCarbByMode(),
         1));
     print('This is your username : $email');
     if (res > 0) {

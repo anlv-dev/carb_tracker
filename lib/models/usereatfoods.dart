@@ -1,43 +1,43 @@
 class UserEatFoods {
   int _id;
-  String _usrId;
-  String _ngayanuong;
-  int _idThucan;
-  int _numberOfFood;
-
-  UserEatFoods(
-      this._usrId, this._ngayanuong, this._idThucan, this._numberOfFood);
+  String _username;
+  String _eatDate;
+  int _idFood;
+  int _numberFood;
+//"CREATE TABLE $tableUserEatFood($columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+// $columnusername TEXT,$coleatDate TEXT, $colidFood INTEGER, $colnumberFood INTEGER)");
+  UserEatFoods(this._username, this._eatDate, this._idFood, this._numberFood);
 
   UserEatFoods.map(dynamic obj) {
     this._id = obj["id"];
-    this._usrId = obj["usrId"];
-    this._ngayanuong = obj["ngayanuong"];
-    this._idThucan = obj["idThucan"];
-    this._numberOfFood = obj["numberOfFood"];
+    this._username = obj["username"];
+    this._eatDate = obj["eatDate"];
+    this._idFood = obj["idFood"];
+    this._numberFood = obj["numberFood"];
   }
 
   int get id => _id;
-  String get usrId => _usrId;
-  String get ngayanuong => _ngayanuong;
-  int get idThucan => _idThucan;
-  int get numberOfFood => _numberOfFood;
+  String get username => _username;
+  String get eatDate => _eatDate;
+  int get idFood => _idFood;
+  int get numberFood => _numberFood;
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["id"] = _id;
-    map["usrId"] = _usrId;
-    map["ngayanuong"] = _ngayanuong;
-    map["idThucan"] = _idThucan;
-    map["numberOfFood"] = _numberOfFood;
+    map["username"] = _username;
+    map["eatDate"] = _eatDate;
+    map["idFood"] = _idFood;
+    map["numberFood"] = _numberFood;
 
     return map;
   }
 
   UserEatFoods.fromMap(Map<String, dynamic> map) {
     this._id = map["id"];
-    this._usrId = map["usrId"];
-    this._ngayanuong = map["ngayanuong"];
-    this._idThucan = map["idThucan"];
-    this._numberOfFood = map["numberOfFood"];
+    this._username = map["username"];
+    this._eatDate = map["eatDate"];
+    this._idFood = map["idFood"];
+    this._numberFood = map["numberFood"];
   }
 }

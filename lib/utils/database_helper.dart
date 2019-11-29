@@ -108,9 +108,9 @@ class DatabaseHelper {
 
   // Save idfood of user in table UserEatFood
 
-  Future<int> saveUserEateFood(UserEatFoods userEatFoods) async {
+  Future<int> saveUserEatFood(UserEatFoods userEatFoods) async {
     var dbClient = await db;
-    int res = await dbClient.insert("$tableFoodBank", userEatFoods.toMap());
+    int res = await dbClient.insert("$tableUserEatFood", userEatFoods.toMap());
     return res;
   }
 
@@ -139,6 +139,13 @@ class DatabaseHelper {
     var dbClient = await db;
     return Sqflite.firstIntValue(
         await dbClient.rawQuery("SELECT COUNT(*) FROM $tableUser"));
+  }
+
+  Future<List> getFoodIdByDate(String ngay, String usrId) async {
+    var dbClient = await db;
+    var result = await dbClient.rawQuery(
+        "SELECT * FROM $tableUserEatFood WHERE $coleatDate = '$ngay' AND $columnusername = $usrId");
+    return result.toList();
   }
 
   Future<int> checkExistUser(String email) async {

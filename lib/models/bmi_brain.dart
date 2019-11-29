@@ -57,13 +57,10 @@ class BMIBrain {
     int result;
     age = currentYear - birthday;
 
-
     if (gender == 'NAM') {
-
       _minCalo = (13.397 * wei) + (4.799 * hei) - (5.677 * age) + 88.362;
       result = _minCalo.round();
     } else if (gender == 'NU') {
-
       _minCalo = (9.247 * wei) + (3.098 * hei) - (4.33 * age) + 447.593;
       result = _minCalo.round();
     }
@@ -98,7 +95,7 @@ class BMIBrain {
     }
   }
 
-  int  cyclingCalories() {
+  int cyclingCalories() {
     if (cyclingDistance > 0) {
       _cycleCalories = cyclingDistance * (12 + (wei - 56) * 2.9);
       return _cycleCalories.round();
@@ -116,92 +113,94 @@ class BMIBrain {
   }
 
   double getRequireCarbByMode() {
+    double result;
     if (gender == 'NAM') {
       if (eatMode == 'BT') {
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.65) / 4;
+          result = (totalPower() * 0.65) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.64) / 4;
+          result = (totalPower() * 0.64) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.63) / 4;
+          result = (totalPower() * 0.63) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.62) / 4;
+          result = (totalPower() * 0.62) / 4;
         }
       } else if (eatMode == 'GC') {
         print(eatMode);
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.63) / 4;
+          result = (totalPower() * 0.63) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.62) / 4;
+          result = (totalPower() * 0.62) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.61) / 4;
+          result = (totalPower() * 0.61) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.60) / 4;
+          result = (totalPower() * 0.60) / 4;
         }
       } else if (eatMode == 'TC') {
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.65) / 4;
+          result = (totalPower() * 0.65) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.65) / 4;
+          result = (totalPower() * 0.65) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.64) / 4;
+          result = (totalPower() * 0.64) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.63) / 4;
+          result = (totalPower() * 0.63) / 4;
         }
       } else if (eatMode == 'TD') {
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.60) / 4;
+          result = (totalPower() * 0.60) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.59) / 4;
+          result = (totalPower() * 0.59) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.58) / 4;
+          result = (totalPower() * 0.58) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.57) / 4;
+          result = (totalPower() * 0.57) / 4;
         }
       }
     } else {
       if (eatMode == 'BT') {
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.64) / 4;
+          result = (totalPower() * 0.64) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.63) / 4;
+          result = (totalPower() * 0.63) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.62) / 4;
+          result = (totalPower() * 0.62) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.61) / 4;
+          result = (totalPower() * 0.61) / 4;
         }
       } else if (eatMode == 'GC') {
         print(eatMode);
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.63) / 4;
+          result = (totalPower() * 0.63) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.62) / 4;
+          result = (totalPower() * 0.62) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.61) / 4;
+          result = (totalPower() * 0.61) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.60) / 4;
+          result = (totalPower() * 0.60) / 4;
         }
       } else if (eatMode == 'TC') {
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.65) / 4;
+          result = (totalPower() * 0.65) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.65) / 4;
+          result = (totalPower() * 0.65) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.64) / 4;
+          result = (totalPower() * 0.64) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.63) / 4;
+          result = (totalPower() * 0.63) / 4;
         }
       } else if (eatMode == 'TD') {
         if (age >= 6 && age <= 18) {
-          return (totalPower() * 0.60) / 4;
+          result = (totalPower() * 0.60) / 4;
         } else if (age >= 19 && age <= 40) {
-          return (totalPower() * 0.59) / 4;
+          result = (totalPower() * 0.59) / 4;
         } else if (age >= 41 && age <= 60) {
-          return (totalPower() * 0.58) / 4;
+          result = (totalPower() * 0.58) / 4;
         } else if (age >= 61) {
-          return (totalPower() * 0.57) / 4;
+          result = (totalPower() * 0.57) / 4;
         }
       }
     }
+    return result.roundToDouble();
   }
 }
