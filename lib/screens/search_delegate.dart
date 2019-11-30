@@ -154,8 +154,8 @@ class DataSearch extends SearchDelegate<String> {
         elevation: 2.0,
         child: ListTile(
           onTap: () {
-            print(suggestionList[index]);
-            idIndex = cities.indexOf(suggestionList[index]);
+            //print(suggestionList[index]);
+            idIndex = cities.indexOf(suggestionList[index]) +1;
             print('When tap on search : $idIndex');
             Navigator.pop(context, idIndex.toString());
             Navigator.pop(context, idIndex.toString());

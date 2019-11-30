@@ -6,7 +6,7 @@ class UserEnergy {
   String _gender;
   String _mode;
   String _bmi;
-  int _minCalo;
+  double _minCalo;
   double _totalCarb;
   int _stat;
 
@@ -42,7 +42,7 @@ class UserEnergy {
   String get gt => _gender;
   String get mode => _mode;
   String get bmi => _bmi;
-  int get mincalo => _minCalo;
+  double get mincalo => _minCalo;
   double get totalcarb => _totalCarb;
   int get status => _stat;
 

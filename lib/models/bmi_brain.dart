@@ -52,17 +52,17 @@ class BMIBrain {
     return result;
   }
 
-  int minimizeCalories() {
+  double minimizeCalories() {
     int currentYear = DateTime.now().year;
-    int result;
+    double result;
     age = currentYear - birthday;
 
     if (gender == 'NAM') {
       _minCalo = (13.397 * wei) + (4.799 * hei) - (5.677 * age) + 88.362;
-      result = _minCalo.round();
+      result = _minCalo.roundToDouble();
     } else if (gender == 'NU') {
       _minCalo = (9.247 * wei) + (3.098 * hei) - (4.33 * age) + 447.593;
-      result = _minCalo.round();
+      result = _minCalo.roundToDouble();
     }
     return result;
   }
@@ -104,7 +104,7 @@ class BMIBrain {
     }
   }
 
-  int totalPower() {
+  double totalPower() {
     return minimizeCalories() +
         walkingCalories() +
         runningCalories() +
@@ -126,7 +126,7 @@ class BMIBrain {
           result = (totalPower() * 0.62) / 4;
         }
       } else if (eatMode == 'GC') {
-        print(eatMode);
+        //print(eatMode);
         if (age >= 6 && age <= 18) {
           result = (totalPower() * 0.63) / 4;
         } else if (age >= 19 && age <= 40) {

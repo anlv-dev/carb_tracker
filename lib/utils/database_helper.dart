@@ -72,7 +72,7 @@ class DatabaseHelper {
         "CREATE TABLE $tableUser($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $columnusername TEXT, $columnPassword TEXT)");
 
     await db.execute(
-        "CREATE TABLE $tableUserEnergy($columnusername TEXT, $columnBirthday INTEGER, $columnHeight INTEGER, $columnWeight INTEGER, $columnGender TEXT, $columnMode TEXT,$columnBMI TEXT, $columnMinCalo INTEGER,  $columnTotalCarb INTEGER,  $columnStatus INTEGER)");
+        "CREATE TABLE $tableUserEnergy($columnusername TEXT, $columnBirthday INTEGER, $columnHeight INTEGER, $columnWeight INTEGER, $columnGender TEXT, $columnMode TEXT,$columnBMI TEXT, $columnMinCalo REAL,  $columnTotalCarb REAL,  $columnStatus INTEGER)");
 
     await db.execute(
         "CREATE TABLE $tableUserEatFood($columnId INTEGER PRIMARY KEY AUTOINCREMENT,$columnusername TEXT,$coleatDate TEXT, $colidFood INTEGER, $colnumberFood INTEGER)");
@@ -98,8 +98,6 @@ class DatabaseHelper {
     return res;
   }
 
-  // Save FoodBanks
-
   Future<int> saveFoodBanks(FoodBanker fb) async {
     var dbClient = await db;
     int res = await dbClient.insert("$tableFoodBank", fb.toMap());
@@ -113,6 +111,8 @@ class DatabaseHelper {
     int res = await dbClient.insert("$tableUserEatFood", userEatFoods.toMap());
     return res;
   }
+
+
 
   //Count row in tableuserEnergy
 
@@ -135,6 +135,8 @@ class DatabaseHelper {
         await dbClient.rawQuery("SELECT COUNT(*) FROM $tableUserEatFood"));
   }
 
+
+
   Future<int> getCountUser() async {
     var dbClient = await db;
     return Sqflite.firstIntValue(
@@ -144,7 +146,7 @@ class DatabaseHelper {
   Future<List> getFoodIdByDate(String ngay, String usrId) async {
     var dbClient = await db;
     var result = await dbClient.rawQuery(
-        "SELECT * FROM $tableUserEatFood WHERE $coleatDate = '$ngay' AND $columnusername = $usrId");
+        "SELECT * FROM $tableUserEatFood WHERE $coleatDate = '$ngay' AND $columnusername = '$usrId'");
     return result.toList();
   }
 

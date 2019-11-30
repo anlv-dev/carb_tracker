@@ -31,29 +31,45 @@ class _MyHomePageState extends State<MyHomePage> {
   String _username;
   int _noOfItems = 0;
   List _listFoods;
+  List _listIdFood =[];
   FoodBank foodBank = new FoodBank();
-
+  String _foodName="";
+  String _foodDvt="";
+  double _foodCarb=0;
   String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
   void getSomeData() async {
     //username : tvanh@vn.vn
     //get BMI
     if (widget.emailText != null) {
-      UserEnergy _userEnergy;
-      _userEnergy = await _db.getUserEnergy(widget.emailText);
       _username = widget.emailText;
-      //_bmiIndex = _userEnergy.bmi;
-      //_minCalo = _userEnergy.mincalo.roundToDouble();
-      //_totalCarb = _userEnergy.totalcarb;
-      //_percentCarb = _dailyCarb / _totalCarb;
-      print(_username);
-      print(_bmiIndex);
+      UserEnergy _userEnergy;
+      _userEnergy = await _db.getUserEnergy(_username);
+      //_userEnergy = await _db.getUserEnergy('anlv@pvn.vn');
+
+      //print('This is username from main_track: $_username');
+      //print('This is selected date from main_track: $selectedDate');
+      //print('This is noOfItems from main_track: $_noOfItems');
+      _bmiIndex = _userEnergy.bmi;
+      _minCalo = _userEnergy.mincalo.roundToDouble();
+      _totalCarb = _userEnergy.totalcarb;
+      _percentCarb = _dailyCarb / _totalCarb;
+      print('This is a value of : $_dailyCarb daily carb');
+      print('This is a value of : $_percentCarb percent carb');
     }
   }
 
   @override
   void initState() {
-    getSomeData();
+    setState(() {
+
+      getSomeData();
+
+      _loadEatFood();
+    });
+
+
+
 
     super.initState();
   }
@@ -163,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 textBaseline: TextBaseline.alphabetic,
                 children: <Widget>[
                   Text(
-                    '${_dailyCarb.roundToDouble().toString()}',
+                    '$_dailyCarb',
                     style: TextStyle(fontSize: 50.0, color: Colors.blue),
                   ),
                   Text(
@@ -190,20 +206,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         size: 45.0,
                       ),
                       title: Text(
-                        'ABC',
+                        '${foodBank.lstFoods[(_listIdFood[position]) -1].foodName}',
                         style: TextStyle(
                           fontSize: 15.0,
                           color: Colors.blue,
                         ),
                       ),
-                      subtitle: Text('01 BAT'),
+                      subtitle: Text('01 ${foodBank.lstFoods[(_listIdFood[position]) -1].dv}'),
                       trailing: Container(
                         width: 150.0,
                         child: Row(
                           children: <Widget>[
                             SizedBox(width: 30.0),
                             Text(
-                              '20 Carb',
+                              '${foodBank.lstFoods[(_listIdFood[position]) -1].carbs} Carb',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue,
@@ -230,11 +246,11 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: FloatingActionButton(
           elevation: 2.0,
           onPressed: () {
-            //navigateScreens();
+            navigateScreens();
             //getSomeData();
             //_save();
             //_getCountFoodBanks();
-            _loadEatFood();
+            //_loadEatFood();
           },
           child: Icon(
             Icons.add,
@@ -272,12 +288,13 @@ class _MyHomePageState extends State<MyHomePage> {
       context,
       MaterialPageRoute(builder: (context) => SearchPageExample()),
     );
-    print('ID Return from search page : $result');
+    //print('ID Return from search page : $result');
 
     if (result != null) {
       setState(() {
-        _noOfItems = int.parse(result);
-        _saveEateFood(_noOfItems);
+        _noOfItems = _noOfItems + 1;
+        _saveEateFood(int.parse(result));
+        print('ID Return from search page : ${int.parse(result)}');
         _loadEatFood();
       });
       //int res = int.parse(result);
@@ -288,23 +305,42 @@ class _MyHomePageState extends State<MyHomePage> {
   void _saveEateFood(int res) async {
     if (res > 0 && _username != null) {
       await _db.saveUserEatFood(UserEatFoods(_username, selectedDate, res, 1));
+      print('ID is inserted to db : $res');
       if (res > 0) {
         int re2 = await _db.getCountUserEatFood();
-        print(re2);
+        print('Number of records in the table : $re2');
       }
     }
   }
 
   void _loadEatFood() async {
     _listFoods = await _db.getFoodIdByDate(selectedDate, _username);
-    print(_listFoods);
+    _listIdFood =[];
+    //print(_listFoods);
+    _noOfItems = _listFoods.length;
+    //print("This is number of Items loaded from LoadEateFood: $_noOfItems");
+
+    //print('This is username from _loadEatFood: $_username');
+    //print('This is selected date from _loadEatFood: $selectedDate');
+    //print('This is noOfItems from main_track: $_noOfItems');
+
+    if (_noOfItems >0){
 
     for (int i = 0; i < _listFoods.length; i++) {
       UserEatFoods userEatFoods = UserEatFoods.map(_listFoods[i]);
-      print('ID FOOD: ${userEatFoods.idFood}');
-      print(foodBank.lstFoods[userEatFoods.idFood - 1].foodName);
-      _totalCarb = _totalCarb +
-          foodBank.lstFoods[userEatFoods.idFood - 1].carbs.toDouble();
+      _listIdFood.add(userEatFoods.idFood);
+
+//      _foodName = foodBank.lstFoods[userEatFoods.idFood].foodName;
+//      _foodDvt = foodBank.lstFoods[userEatFoods.idFood].dv;
+//      _foodCarb = foodBank.lstFoods[userEatFoods.idFood].carbs;
+//      print('ID FOOD: ${userEatFoods.idFood}');
+//      print(foodBank.lstFoods[userEatFoods.idFood].foodName);
+      _dailyCarb = _dailyCarb +
+          foodBank.lstFoods[userEatFoods.idFood].carbs.roundToDouble();
+
+    }
+    //_percentCarb = _dailyCarb / _totalCarb;
+    print(_listIdFood);
     }
   }
 }
