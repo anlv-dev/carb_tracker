@@ -207,14 +207,14 @@ class _HumanInforState extends State<HumanInfor> {
             SizedBox(
               height: 200.0,
             ),
-            Text(widget.emailText),
+
             ButtonBottom(
               textButton: 'LƯU DỮ LIỆU',
               onTap: () {
                 _saveEnergy(widget.emailText);
-                _printsomething();
-                _getCountRowUserEnergy();
-                Navigator.pushNamed(context, mainTrackRoute);
+                //_printsomething();
+                //_getCountRowUserEnergy();
+                Navigator.pushNamed(context, mainTrackRoute,arguments: widget.emailText);
                 //Tinh toan BMI
                 // -- Neu BMI
                 //Cap nhat thong tin vao DB
@@ -240,7 +240,7 @@ class _HumanInforState extends State<HumanInfor> {
         cal.minimizeCalories(),
         cal.getRequireCarbByMode(),
         1));
-    print('This is your username : $email');
+    //print('This is your username : $email');
     if (res > 0) {
       print('Save success!');
     }
@@ -254,8 +254,8 @@ class _HumanInforState extends State<HumanInfor> {
   void _printsomething() {
     BMIBrain cal = new BMIBrain(
         hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
-    String res1 = cal.minimizeCalories().round().toString();
-    String res2 = cal.getRequireCarbByMode().round().toString();
+    String res1 = cal.minimizeCalories().roundToDouble().toString();
+    String res2 = cal.getRequireCarbByMode().roundToDouble().toString();
     String res3 = cal.bmiResult();
 
     print('Nam sinh : ${cal.birthday}');

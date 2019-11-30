@@ -29,8 +29,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => RegistrationScreen());
         break;
       case humanInfoRoute:
-        var data = settings.arguments as String;
-        return MaterialPageRoute(builder: (_) => HumanInfor(data));
+        var data1 = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => HumanInfor(data1));
         break;
       case mainTrackRoute:
         var data = settings.arguments as String;
