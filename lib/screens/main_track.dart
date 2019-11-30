@@ -229,6 +229,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             IconButton(
                               onPressed: () {
                                 print('Deleted button was pressed.');
+                                print('${foodBank.lstFoods[(_listIdFood[position]) - 1].foodName}');
+                                _deleteItem((_listIdFood[position]) -1 );
+                                _loadEatFood();
                               },
                               icon: Icon(
                                 Icons.delete,
@@ -318,8 +321,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _deleteItem() async{
-
+  void _deleteItem(int idFood) async{
+      await _db.deleteUserEatFood1(idFood);
+      print('Delete funtion called');
   }
 
   void _loadEatFood() async {

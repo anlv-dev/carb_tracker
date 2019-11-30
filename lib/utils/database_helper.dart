@@ -217,6 +217,21 @@ class DatabaseHelper {
         .delete("$tableUser", where: "$columnId = ?", whereArgs: [id]);
   }
 
+  //Delete FoodID in Table : UserEateFood
+  Future<int> deleteUserEatFood(int idFood, String usrId, String ngay) async {
+    var dbClient = await db;
+    return await dbClient
+        .delete("$tableUserEatFood", where: "$coleatDate = ?, $columnusername =?, $colnumberFood = ?", whereArgs: ['$ngay','$usrId','$idFood']);
+
+  }
+
+  Future<int> deleteUserEatFood1(int id) async {
+    var dbClient = await db;
+    return await dbClient
+        .delete("$tableUserEatFood", where: "$colnumberFood = ?", whereArgs: [id]);
+  }
+
+
   Future<int> updateUser(User user) async {
     var dbClient = await db;
     return await dbClient.update('$tableUser', user.toMap(),
