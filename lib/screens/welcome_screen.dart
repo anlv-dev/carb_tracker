@@ -1,6 +1,9 @@
+import 'package:carbs_tracker_ex/models/foodBank.dart';
 import 'package:carbs_tracker_ex/screens/login_screen.dart';
 import 'package:carbs_tracker_ex/screens/registration_screen.dart';
+import 'package:carbs_tracker_ex/utils/database_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:carbs_tracker_ex/models/food_Banks.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String id = 'WelcomeScreen';
@@ -10,6 +13,7 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
+  var _db = DatabaseHelper();
   static String id = 'Welcome_Screen';
 
   AnimationController controller;
@@ -18,6 +22,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   void initState() {
     super.initState();
+    //_db = DatabaseHelper();
+    _initFoodBank();
 
     controller = AnimationController(
       duration: Duration(seconds: 1),
@@ -116,4 +122,21 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       ),
     );
   }
+
+  void _initFoodBank() async {
+    int _countRecord = await _db.getCountFoodBanks();
+    //print('Number of records of FoodBank table: $_countRecord');
+    var _foodBank = new FoodBank();
+    if (_countRecord == 0) {
+      for(int i =0; i < _foodBank.lstFoods.length; i++){
+        await _db.saveFoodBanks(new FoodBanker(
+            _foodBank.lstFoods[i].foodName, _foodBank.lstFoods[i].dv, _foodBank.lstFoods[i].carbs, 0, _foodBank.lstFoods[i].group));
+        }
+    }
+    //int _resultRecord = await _db.getCountFoodBanks();
+    //print('Number of records of FoodBank table: $_resultRecord');
+  }
+
+
+
 }

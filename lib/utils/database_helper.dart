@@ -163,7 +163,7 @@ class DatabaseHelper {
     var dbClient = await db;
     int result = Sqflite.firstIntValue(await dbClient.rawQuery(
         "SELECT COUNT(*) FROM $tableUserEnergy WHERE $columnusername = '$email'"));
-    print('Your Email : $email');
+    //print('Your Email : $email');
 
     return result;
   }
@@ -228,7 +228,7 @@ class DatabaseHelper {
   Future<int> deleteUserEatFood1(int id) async {
     var dbClient = await db;
     return await dbClient
-        .delete("$tableUserEatFood", where: "$colnumberFood = ?", whereArgs: [id]);
+        .delete("$tableUserEatFood", where: "$columnId = ?", whereArgs: [id]);
   }
 
 
@@ -241,5 +241,21 @@ class DatabaseHelper {
   Future close() async {
     var dbClient = await db;
     return dbClient.close();
+  }
+
+  //GET ALL LIST FOOD FOR EACH USER BY DATE
+
+  Future<List<FoodBanker>> getAllEatListFoods(String usrId, String ngay) async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $tableUserEatFood WHERE $columnusername = '$usrId' AND $coleatDate = '$ngay' ");
+    List<FoodBanker> list = [];
+    if (maps.length >0){
+      for (int i=0;i<maps.length;i++){
+        list.add(FoodBanker.fromMap(maps[i]));
+      }
+    }
+    return list;
+    //var result = await dbClient.rawQuery("SELECT * FROM $tableUserEatFood");
+    //return result.toList();
   }
 }

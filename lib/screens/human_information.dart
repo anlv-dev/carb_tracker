@@ -22,6 +22,7 @@ class _HumanInforState extends State<HumanInfor> {
   int birth = 1982;
   String gen = 'NU';
   String cd = 'BT';
+  String ddGT = 'NAM';
 
   @override
   Widget build(BuildContext context) {
@@ -132,32 +133,49 @@ class _HumanInforState extends State<HumanInfor> {
             SizedBox(
               height: 5.0,
             ),
-            new TextFormField(
-              onChanged: (gt) {
-                setState(() {
-                  gen = gt.toUpperCase();
-                  //print(gen);
-                });
-              },
-              style: TextStyle(
-                color: Colors.lightBlueAccent,
-                fontSize: 15.0,
-                fontWeight: FontWeight.bold,
-              ),
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                  icon: const Icon(
-                    Icons.assignment_ind,
-                    color: Colors.lightBlueAccent,
-                  ),
-                  hintText: 'Giới tính',
-                  labelText: 'Giới tính',
-                  labelStyle: TextStyle(
+
+            Row(
+              children: <Widget>[
+                Icon(
+                  Icons.assignment_ind,
+                  color: Colors.lightBlueAccent,
+                  size: 20.0,
+                ),
+
+                SizedBox(
+                  width: 20.0,
+                ),
+                DropdownButton<String>(
+                  value: ddGT,
+                  style: TextStyle(
+                    color: Colors.teal,
                     fontWeight: FontWeight.bold,
                     fontSize: 15.0,
-                    color: Colors.teal,
-                  )),
+                  ),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.white,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      ddGT = newValue;
+                      //print(_viettatdropdownbox(newValue));
+                      //cd = _viettatdropdownbox(newValue);
+                    });
+                  },
+                  items: <String>[
+                    'NAM',
+                    'NU'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
+
 
             Row(
               children: <Widget>[
@@ -228,7 +246,7 @@ class _HumanInforState extends State<HumanInfor> {
 
   void _saveEnergy(String email) async {
     BMIBrain cal = new BMIBrain(
-        hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
+        hei: height, wei: weight, birthday: birth, eatMode: cd, gender: ddGT);
     int res = await _db.saveUserEnergy(new UserEnergy(
         email,
         cal.birthday,
@@ -253,7 +271,7 @@ class _HumanInforState extends State<HumanInfor> {
 
   void _printsomething() {
     BMIBrain cal = new BMIBrain(
-        hei: height, wei: weight, birthday: birth, eatMode: cd, gender: gen);
+        hei: height, wei: weight, birthday: birth, eatMode: cd, gender: ddGT);
     String res1 = cal.minimizeCalories().roundToDouble().toString();
     String res2 = cal.getRequireCarbByMode().roundToDouble().toString();
     String res3 = cal.bmiResult();

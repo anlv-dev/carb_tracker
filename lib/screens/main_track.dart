@@ -13,13 +13,14 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-const String notification1 = "Lượng carbs nạp vào quá ít, có nguy cơ hạ đường huyết hoặc ảnh hường đến sức khỏe của não bộ. Chỉ ăn: cơm, xôi, hủ tiếu, bún, phở, bánh mì thôi";
-const String notification2 = "Lượng carbs nạp vào gần đủ, nên chọn thức ăn ít Carbs nhé. Chỉ ăn các loại thịt, cá, rau, trái cây thôi";
-const String notification3 = "Lượng carbs nạp vào nhiều hơn mức cần thiết, có nguy cơ tăng cân, tăng lượng đường trong máu sẽ dẫn đến tiểu đường.  Đề nghị ăn các loại thịt, cá, rau và tăng cường vận động bạn nhé";
-const String notification4 = "Lượng carbs “xấu” nạp vào nhiều, có nguy cơ bị tiểu đường và nghiện đồ ngọt. Tăng cường ăn thức ăn từ rau, củ, quả tự nhiên nhé";
-
-
-
+const String notification1 =
+    "Lượng carbs nạp vào quá ít, có nguy cơ hạ đường huyết hoặc ảnh hường đến sức khỏe của não bộ. Chỉ ăn: cơm, xôi, hủ tiếu, bún, phở, bánh mì thôi";
+const String notification2 =
+    "Lượng carbs nạp vào gần đủ, nên chọn thức ăn ít Carbs nhé. Chỉ ăn các loại thịt, cá, rau, trái cây thôi";
+const String notification3 =
+    "Lượng carbs nạp vào nhiều hơn mức cần thiết, có nguy cơ tăng cân, tăng lượng đường trong máu sẽ dẫn đến tiểu đường.  Đề nghị ăn các loại thịt, cá, rau và tăng cường vận động bạn nhé";
+const String notification4 =
+    "Lượng carbs “xấu” nạp vào nhiều, có nguy cơ bị tiểu đường và nghiện đồ ngọt. Tăng cường ăn thức ăn từ rau, củ, quả tự nhiên nhé";
 
 class MyHomePage extends StatefulWidget {
   static String id = 'Main_Track';
@@ -32,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  var _db = new DatabaseHelper();
+  var _db;
   String _bmiIndex = "";
   double _minCalo = 0;
   double _totalCarb = 0;
@@ -40,18 +41,27 @@ class _MyHomePageState extends State<MyHomePage> {
   double _dailyCarb = 0;
 
   //Variables for daily group(X,Y,Z,T) Carb
-  double _totalCarbX=0;
-  double _totalCarbY=0;
-  double _totalCarbZ=0;
-  double _totalCarbT=0;
+  double _totalCarbX = 0;
+  double _totalCarbY = 0;
+  double _totalCarbZ = 0;
+  double _totalCarbT = 0;
 
   String _username;
   int _noOfItems = 0;
   List _listFoods;
   List _listIdFood = [];
+  List _listIdNo = [];
+
   FoodBank foodBank = new FoodBank();
 
   String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
+
+  void refreshList() {
+    setState(() {
+      getSomeData();
+      _loadEatFood();
+    });
+  }
 
   void getSomeData() async {
     //username : tvanh@vn.vn
@@ -60,28 +70,25 @@ class _MyHomePageState extends State<MyHomePage> {
       _username = widget.emailText;
       UserEnergy _userEnergy;
       _userEnergy = await _db.getUserEnergy(_username);
-
       _bmiIndex = _userEnergy.bmi;
       _minCalo = _userEnergy.mincalo.roundToDouble();
       _totalCarb = _userEnergy.totalcarb;
-      //_percentCarb = _dailyCarb / _totalCarb;
-      print('This is a value of : $_dailyCarb daily carb');
-      print('This is a value of : $_percentCarb percent carb');
     }
   }
 
   @override
   void initState() {
     setState(() {
+      _db = DatabaseHelper();
       _username = widget.emailText;
-      getSomeData();
-      _loadEatFood();
+      //_listFoods = _db.getFoodIdByDate(selectedDate, _username);
+      refreshList();
 
     });
 
     super.initState();
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('app_icon');
+        new AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
@@ -248,10 +255,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             IconButton(
                               onPressed: () {
-                                print('Deleted button was pressed.');
-                                print('${foodBank.lstFoods[(_listIdFood[position]) - 1].foodName}');
-                                _deleteItem((_listIdFood[position]) -1 );
-                                _loadEatFood();
+                                _deleteItem(_listIdNo[position]);
+                                setState(() {
+                                  _noOfItems = _noOfItems -1;
+                                  refreshList();
+
+
+                                });
                               },
                               icon: Icon(
                                 Icons.delete,
@@ -305,8 +315,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-
-
   void _getCountFoodBanks() async {
     int re = await _db.getCountFoodBanks();
     print(re);
@@ -321,7 +329,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (result != null) {
       setState(() {
-        _noOfItems = _noOfItems + 1;
+        //_noOfItems = _noOfItems + 1;
         _saveEateFood(int.parse(result));
         //print('ID Return from search page : ${int.parse(result)}');
         _loadEatFood();
@@ -342,89 +350,98 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _deleteItem(int idFood) async{
-      await _db.deleteUserEatFood1(idFood);
-      print('Delete funtion called');
+  void _getCountRowInUserEatFood() async {
+    int re2 = await _db.getCountUserEatFood();
+    print('Number of records in the table : $re2');
+  }
+
+  void _getTest() async {
+    List<FoodBanker> _lst;
+    //await dbc.getAllEatListFoods('anhlq', '02-Dec-2019');
+    //print( await _db.getAllEatListFoods('anhlq', '02-Dec-2019'));
+    _lst = await _db.getAllEatListFoods('anhlq', '02-Dec-2019');
+    print('Chieu dai cua list:${_lst.length}');
+  }
+
+  void _deleteItem(int idFood) async {
+    await _db.deleteUserEatFood1(idFood);
+    print('Delete funtion called');
   }
 
   void _loadEatFood() async {
     _listFoods = await _db.getFoodIdByDate(selectedDate, _username);
     _listIdFood = [];
+    _listIdNo = [];
     _noOfItems = _listFoods.length;
     _dailyCarb = 0;
     _totalCarbX = 0;
-    _totalCarbY =0;
-    _totalCarbZ = 0 ;
-    String _group="";
+    _totalCarbY = 0;
+    _totalCarbZ = 0;
+    String _group = "";
 
     if (_noOfItems > 0) {
       for (int i = 0; i < _listFoods.length; i++) {
         UserEatFoods userEatFoods = UserEatFoods.map(_listFoods[i]);
         _listIdFood.add(userEatFoods.idFood);
+        _listIdNo.add((userEatFoods.id));
 
 //      _foodName = foodBank.lstFoods[userEatFoods.idFood].foodName;
 //      _foodDvt = foodBank.lstFoods[userEatFoods.idFood].dv;
 //      _foodCarb = foodBank.lstFoods[userEatFoods.idFood].carbs;
 //      print('ID FOOD: ${userEatFoods.idFood}');
 //      print(foodBank.lstFoods[userEatFoods.idFood].foodName);
-        _dailyCarb = _dailyCarb +
-            foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        _dailyCarb =
+            _dailyCarb + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
 
         _group = foodBank.lstFoods[userEatFoods.idFood - 1].group;
         //Calculated carbohydrate for each group
 
-        if (_group == 'X'){
-          _totalCarbX = _totalCarbX + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
-        } else if (_group=='Y'){
-          _totalCarbY = _totalCarbY + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
-        }else if (_group=='Z'){
-          _totalCarbZ = _totalCarbZ + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
-        }else if (_group=='T'){
-          _totalCarbT = _totalCarbT + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        if (_group == 'X') {
+          _totalCarbX =
+              _totalCarbX + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        } else if (_group == 'Y') {
+          _totalCarbY =
+              _totalCarbY + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        } else if (_group == 'Z') {
+          _totalCarbZ =
+              _totalCarbZ + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        } else if (_group == 'T') {
+          _totalCarbT =
+              _totalCarbT + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
         }
-
-
-
       }
       _dailyCarb = _dailyCarb.roundToDouble();
       _percentCarb = ((_dailyCarb / _totalCarb) * 100).roundToDouble();
-      print('{Daily Carb : $_dailyCarb.toString()}');
-      print('Total carb : ${_totalCarb.toString()}');
-      print('Percent : $_percentCarb ');
 
-      print('Total carb group X : ${_totalCarbX.toString()}');
-      print('Total carb group Y : ${_totalCarbY.toString()}');
-      print('Total carb group Z : ${_totalCarbZ.toString()}');
-      print('Total carb group T : ${_totalCarbT.toString()}');
-
-      print('Notifcation is : ${_carbGroupToString(_totalCarbX, _totalCarbY, _totalCarbZ, _totalCarbT)}');
-      _showNotificationWithDefaultSound(_carbGroupToString(_totalCarbX, _totalCarbY, _totalCarbZ, _totalCarbT));
-      print(_listIdFood);
+      _showNotificationWithDefaultSound(_carbGroupToString(
+          _totalCarbX, _totalCarbY, _totalCarbZ, _totalCarbT));
+      print('Number of Food :$_listIdFood');
+      print('Number of auto id in table :$_listIdNo');
     }
   }
+
   //Function Carbohydrate to String
-  String _carbGroupToString(double groupX, double groupY, double groupZ, double groupT) {
-    String notification="";
-    if ((groupX + groupY + groupZ + groupT) < (_totalCarb * 0.5)){
+  String _carbGroupToString(
+      double groupX, double groupY, double groupZ, double groupT) {
+    String notification = "";
+    if ((groupX + groupY + groupZ + groupT) < (_totalCarb * 0.5)) {
       notification = notification1;
     }
-    if (((groupX + groupY + groupZ + groupT) > (_totalCarb * 0.9)) && ((groupX + groupY + groupZ + groupT) < (_totalCarb * 1.1))){
+    if (((groupX + groupY + groupZ + groupT) > (_totalCarb * 0.9)) &&
+        ((groupX + groupY + groupZ + groupT) < (_totalCarb * 1.1))) {
       notification = notification2;
     }
 
-    if (((groupX + groupY + groupZ + groupT) > (_totalCarb * 1.1)) ){
+    if (((groupX + groupY + groupZ + groupT) > (_totalCarb * 1.1))) {
       notification = notification3;
     }
 
-    if ((groupY + groupZ) >(_totalCarb * 0.4)){
+    if ((groupY + groupZ) > (_totalCarb * 0.4)) {
       notification = notification4;
     }
 
     return notification;
-
-
   }
-
 
   Future _onSelectNotification(String payload) async {
     showDialog(
@@ -432,11 +449,15 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (_) {
         return new AlertDialog(
           title: Text("TrackCarb"),
-          content: Text("Khuyến nghị : $payload",style: TextStyle(color: Colors.blue),),
+          content: Text(
+            "Khuyến nghị : $payload",
+            style: TextStyle(color: Colors.blue),
+          ),
         );
       },
     );
   }
+
   Future _showNotificationWithDefaultSound(String _notify) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
