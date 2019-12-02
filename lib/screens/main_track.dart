@@ -11,10 +11,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+const String notification1 = "Lượng carbs nạp vào quá ít, có nguy cơ hạ đường huyết hoặc ảnh hường đến sức khỏe của não bộ. Chỉ ăn: cơm, xôi, hủ tiếu, bún, phở, bánh mì thôi";
+const String notification2 = "Lượng carbs nạp vào gần đủ, nên chọn thức ăn ít Carbs nhé. Chỉ ăn các loại thịt, cá, rau, trái cây thôi";
+const String notification3 = "Lượng carbs nạp vào nhiều hơn mức cần thiết, có nguy cơ tăng cân, tăng lượng đường trong máu sẽ dẫn đến tiểu đường.  Đề nghị ăn các loại thịt, cá, rau và tăng cường vận động bạn nhé";
+const String notification4 = "Lượng carbs “xấu” nạp vào nhiều, có nguy cơ bị tiểu đường và nghiện đồ ngọt. Tăng cường ăn thức ăn từ rau, củ, quả tự nhiên nhé";
+
+
+
 
 class MyHomePage extends StatefulWidget {
   static String id = 'Main_Track';
-  String emailText;
+  final String emailText;
   MyHomePage(this.emailText);
 
   @override
@@ -22,20 +31,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   var _db = new DatabaseHelper();
   String _bmiIndex = "";
   double _minCalo = 0;
   double _totalCarb = 0;
   double _percentCarb = 0;
   double _dailyCarb = 0;
+
+  //Variables for daily group(X,Y,Z,T) Carb
+  double _totalCarbX=0;
+  double _totalCarbY=0;
+  double _totalCarbZ=0;
+  double _totalCarbT=0;
+
   String _username;
   int _noOfItems = 0;
   List _listFoods;
   List _listIdFood = [];
   FoodBank foodBank = new FoodBank();
-  String _foodName = "";
-  String _foodDvt = "";
-  double _foodCarb = 0;
+
   String selectedDate = new DateFormat('dd-MMM-yyyy').format(DateTime.now());
 
   void getSomeData() async {
@@ -45,15 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
       _username = widget.emailText;
       UserEnergy _userEnergy;
       _userEnergy = await _db.getUserEnergy(_username);
-      //_userEnergy = await _db.getUserEnergy('anlv@pvn.vn');
 
-      //print('This is username from main_track: $_username');
-      //print('This is selected date from main_track: $selectedDate');
-      //print('This is noOfItems from main_track: $_noOfItems');
       _bmiIndex = _userEnergy.bmi;
       _minCalo = _userEnergy.mincalo.roundToDouble();
       _totalCarb = _userEnergy.totalcarb;
-      _percentCarb = _dailyCarb / _totalCarb;
+      //_percentCarb = _dailyCarb / _totalCarb;
       print('This is a value of : $_dailyCarb daily carb');
       print('This is a value of : $_percentCarb percent carb');
     }
@@ -65,9 +76,18 @@ class _MyHomePageState extends State<MyHomePage> {
       _username = widget.emailText;
       getSomeData();
       _loadEatFood();
+
     });
 
     super.initState();
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: _onSelectNotification);
   }
 
   @override
@@ -253,6 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
           elevation: 2.0,
           onPressed: () {
             navigateScreens();
+            //_showNotificationWithDefaultSound();
             //getSomeData();
             //_save();
             //_getCountFoodBanks();
@@ -329,14 +350,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void _loadEatFood() async {
     _listFoods = await _db.getFoodIdByDate(selectedDate, _username);
     _listIdFood = [];
-    //print(_listFoods);
     _noOfItems = _listFoods.length;
-    //print("This is number of Items loaded from LoadEateFood: $_noOfItems");
-
-    //print('This is username from _loadEatFood: $_username');
-    //print('This is selected date from _loadEatFood: $selectedDate');
-    //print('This is noOfItems from main_track: $_noOfItems');
     _dailyCarb = 0;
+    _totalCarbX = 0;
+    _totalCarbY =0;
+    _totalCarbZ = 0 ;
+    String _group="";
+
     if (_noOfItems > 0) {
       for (int i = 0; i < _listFoods.length; i++) {
         UserEatFoods userEatFoods = UserEatFoods.map(_listFoods[i]);
@@ -348,17 +368,88 @@ class _MyHomePageState extends State<MyHomePage> {
 //      print('ID FOOD: ${userEatFoods.idFood}');
 //      print(foodBank.lstFoods[userEatFoods.idFood].foodName);
         _dailyCarb = _dailyCarb +
-            foodBank.lstFoods[userEatFoods.idFood - 1].carbs.roundToDouble();
-        print('idFood : ${userEatFoods.idFood}');
-        print(
-            'Carb: ${foodBank.lstFoods[userEatFoods.idFood - 1].carbs.roundToDouble()}');
+            foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+
+        _group = foodBank.lstFoods[userEatFoods.idFood - 1].group;
+        //Calculated carbohydrate for each group
+
+        if (_group == 'X'){
+          _totalCarbX = _totalCarbX + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        } else if (_group=='Y'){
+          _totalCarbY = _totalCarbY + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        }else if (_group=='Z'){
+          _totalCarbZ = _totalCarbZ + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        }else if (_group=='T'){
+          _totalCarbT = _totalCarbT + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
+        }
+
+
+
       }
-      _percentCarb = ((_dailyCarb / _totalCarb) * 100);
+      _dailyCarb = _dailyCarb.roundToDouble();
+      _percentCarb = ((_dailyCarb / _totalCarb) * 100).roundToDouble();
       print('{Daily Carb : $_dailyCarb.toString()}');
       print('Total carb : ${_totalCarb.toString()}');
       print('Percent : $_percentCarb ');
 
+      print('Total carb group X : ${_totalCarbX.toString()}');
+      print('Total carb group Y : ${_totalCarbY.toString()}');
+      print('Total carb group Z : ${_totalCarbZ.toString()}');
+      print('Total carb group T : ${_totalCarbT.toString()}');
+
+      print('Notifcation is : ${_carbGroupToString(_totalCarbX, _totalCarbY, _totalCarbZ, _totalCarbT)}');
+      _showNotificationWithDefaultSound(_carbGroupToString(_totalCarbX, _totalCarbY, _totalCarbZ, _totalCarbT));
       print(_listIdFood);
     }
+  }
+  //Function Carbohydrate to String
+  String _carbGroupToString(double groupX, double groupY, double groupZ, double groupT) {
+    String notification="";
+    if ((groupX + groupY + groupZ + groupT) < (_totalCarb * 0.5)){
+      notification = notification1;
+    }
+    if (((groupX + groupY + groupZ + groupT) > (_totalCarb * 0.9)) && ((groupX + groupY + groupZ + groupT) < (_totalCarb * 1.1))){
+      notification = notification2;
+    }
+
+    if (((groupX + groupY + groupZ + groupT) > (_totalCarb * 1.1)) ){
+      notification = notification3;
+    }
+
+    if ((groupY + groupZ) >(_totalCarb * 0.4)){
+      notification = notification4;
+    }
+
+    return notification;
+
+
+  }
+
+
+  Future _onSelectNotification(String payload) async {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: Text("TrackCarb"),
+          content: Text("Khuyến nghị : $payload",style: TextStyle(color: Colors.blue),),
+        );
+      },
+    );
+  }
+  Future _showNotificationWithDefaultSound(String _notify) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Track Your Carbohydrate',
+      '$_notify',
+      platformChannelSpecifics,
+      payload: '$_notify',
+    );
   }
 }
