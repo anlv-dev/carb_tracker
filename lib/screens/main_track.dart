@@ -122,17 +122,6 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  RaisedButton(
-                    child: Icon(
-                      Icons.arrow_left,
-                      size: 10.0,
-                    ),
-                    onPressed: () {},
-                  )
-                ],
-              ),
               FlatButton(
                   onPressed: () {
                     DatePicker.showDatePicker(context,
