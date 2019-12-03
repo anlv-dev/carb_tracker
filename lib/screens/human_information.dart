@@ -141,7 +141,6 @@ class _HumanInforState extends State<HumanInfor> {
                   color: Colors.lightBlueAccent,
                   size: 20.0,
                 ),
-
                 SizedBox(
                   width: 20.0,
                 ),
@@ -163,10 +162,8 @@ class _HumanInforState extends State<HumanInfor> {
                       //cd = _viettatdropdownbox(newValue);
                     });
                   },
-                  items: <String>[
-                    'NAM',
-                    'NU'
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: <String>['NAM', 'NU']
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -175,7 +172,6 @@ class _HumanInforState extends State<HumanInfor> {
                 ),
               ],
             ),
-
 
             Row(
               children: <Widget>[
@@ -232,7 +228,8 @@ class _HumanInforState extends State<HumanInfor> {
                 _saveEnergy(widget.emailText);
                 //_printsomething();
                 //_getCountRowUserEnergy();
-                Navigator.pushNamed(context, mainTrackRoute,arguments: widget.emailText);
+                Navigator.pushNamed(context, mainTrackRoute,
+                    arguments: widget.emailText);
                 //Tinh toan BMI
                 // -- Neu BMI
                 //Cap nhat thong tin vao DB
@@ -254,7 +251,7 @@ class _HumanInforState extends State<HumanInfor> {
         cal.wei,
         cal.gender,
         cal.eatMode,
-        cal.bmiResult(),
+        cal.bmiResult() + '\n' + cal.getEvaluationBMI(),
         cal.minimizeCalories(),
         cal.getRequireCarbByMode(),
         1));

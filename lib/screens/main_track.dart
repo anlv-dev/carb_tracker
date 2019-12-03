@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   var _db;
   String _bmiIndex = "";
+  String _bmiEvaluation = "";
   double _minCalo = 0;
   double _totalCarb = 0;
   double _percentCarb = 0;
@@ -71,8 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
       UserEnergy _userEnergy;
       _userEnergy = await _db.getUserEnergy(_username);
       _bmiIndex = _userEnergy.bmi;
+
       _minCalo = _userEnergy.mincalo.roundToDouble();
       _totalCarb = _userEnergy.totalcarb;
+      setState(() {
+        _bmiIndex = _userEnergy.bmi;
+        _minCalo = _userEnergy.mincalo.roundToDouble();
+        _totalCarb = _userEnergy.totalcarb;
+      });
     }
   }
 
@@ -83,7 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _username = widget.emailText;
       //_listFoods = _db.getFoodIdByDate(selectedDate, _username);
       refreshList();
-
     });
 
     super.initState();
@@ -116,6 +122,17 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
+              Row(
+                children: <Widget>[
+                  RaisedButton(
+                    child: Icon(
+                      Icons.arrow_left,
+                      size: 10.0,
+                    ),
+                    onPressed: () {},
+                  )
+                ],
+              ),
               FlatButton(
                   onPressed: () {
                     DatePicker.showDatePicker(context,
@@ -143,7 +160,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     radius: 100.0,
                     lineWidth: 5.0,
                     percent: 1.0,
-                    center: new Text("$_bmiIndex"),
+                    center: new Text(
+                      "$_bmiIndex",
+                      textAlign: TextAlign.center,
+                    ),
                     progressColor: Colors.green,
                     footer: new Text(
                       "BMI",
@@ -257,10 +277,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               onPressed: () {
                                 _deleteItem(_listIdNo[position]);
                                 setState(() {
-                                  _noOfItems = _noOfItems -1;
+                                  _noOfItems = _noOfItems - 1;
                                   refreshList();
-
-
                                 });
                               },
                               icon: Icon(
@@ -385,11 +403,6 @@ class _MyHomePageState extends State<MyHomePage> {
         _listIdFood.add(userEatFoods.idFood);
         _listIdNo.add((userEatFoods.id));
 
-//      _foodName = foodBank.lstFoods[userEatFoods.idFood].foodName;
-//      _foodDvt = foodBank.lstFoods[userEatFoods.idFood].dv;
-//      _foodCarb = foodBank.lstFoods[userEatFoods.idFood].carbs;
-//      print('ID FOOD: ${userEatFoods.idFood}');
-//      print(foodBank.lstFoods[userEatFoods.idFood].foodName);
         _dailyCarb =
             _dailyCarb + foodBank.lstFoods[userEatFoods.idFood - 1].carbs;
 
@@ -412,11 +425,16 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       _dailyCarb = _dailyCarb.roundToDouble();
       _percentCarb = ((_dailyCarb / _totalCarb) * 100).roundToDouble();
+      setState(() {
+        _dailyCarb = _dailyCarb.roundToDouble();
+        _percentCarb = ((_dailyCarb / _totalCarb) * 100).roundToDouble();
+      });
 
       _showNotificationWithDefaultSound(_carbGroupToString(
           _totalCarbX, _totalCarbY, _totalCarbZ, _totalCarbT));
       print('Number of Food :$_listIdFood');
       print('Number of auto id in table :$_listIdNo');
+      print('Daily Carb: $_dailyCarb');
     }
   }
 
