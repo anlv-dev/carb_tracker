@@ -35,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   var _db;
   String _bmiIndex = "";
-  String _bmiEvaluation = "";
   double _minCalo = 0;
   double _totalCarb = 0;
   double _percentCarb = 0;
@@ -134,6 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         selectedDate =
                             new DateFormat('dd-MMM-yyyy').format(date);
+                        // refreshList();
                       });
                     }, currentTime: DateTime.now(), locale: LocaleType.vi);
                   },
@@ -312,21 +312,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _save() async {
-    int re = await _db
-        .saveFoodBanks(new FoodBanker('COM TRANG', 'BAT', 44.2, 0, 'X'));
-
-    //FoodBanker('COM TRANG', 'BAT', 44.2, 0, 'X')
-    if (re > 0) {
-      print('Save successful!');
-    }
-  }
-
-  void _getCountFoodBanks() async {
-    int re = await _db.getCountFoodBanks();
-    print(re);
-  }
-
   void navigateScreens() async {
     String result = await Navigator.push(
       context,
@@ -355,19 +340,6 @@ class _MyHomePageState extends State<MyHomePage> {
         print('Number of records in the table : $re2');
       }
     }
-  }
-
-  void _getCountRowInUserEatFood() async {
-    int re2 = await _db.getCountUserEatFood();
-    print('Number of records in the table : $re2');
-  }
-
-  void _getTest() async {
-    List<FoodBanker> _lst;
-    //await dbc.getAllEatListFoods('anhlq', '02-Dec-2019');
-    //print( await _db.getAllEatListFoods('anhlq', '02-Dec-2019'));
-    _lst = await _db.getAllEatListFoods('anhlq', '02-Dec-2019');
-    print('Chieu dai cua list:${_lst.length}');
   }
 
   void _deleteItem(int idFood) async {
