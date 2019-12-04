@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         selectedDate =
                             new DateFormat('dd-MMM-yyyy').format(date);
-                        // refreshList();
+                        refreshList();
                       });
                     }, currentTime: DateTime.now(), locale: LocaleType.vi);
                   },
